@@ -1,0 +1,39 @@
+import { createRouter, createWebHistory } from 'vue-router';
+import BookingFlow from '../views/booking/BookingFlow.vue';
+
+const routes = [
+  {
+    path: '/',
+    redirect: '/booking'
+  },
+  {
+    path: '/booking',
+    name: 'booking',
+    component: BookingFlow
+  },
+  {
+    path: '/booking/:businessSlug',
+    name: 'business-booking',
+    component: BookingFlow,
+    props: true
+  },
+  // Estas rutas están comentadas hasta que implementemos sus componentes
+  // {
+  //   path: '/admin',
+  //   name: 'admin',
+  //   component: () => import('../views/admin/AdminDashboard.vue')
+  // },
+  // {
+  //   path: '/:businessSlug',
+  //   name: 'business-site',
+  //   component: () => import('../views/website/BusinessSite.vue'),
+  //   props: true
+  // }
+];
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+});
+
+export default router;
