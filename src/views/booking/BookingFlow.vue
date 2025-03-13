@@ -63,6 +63,7 @@
           :availability="availability"
           :loading="loading"
           :selected-slot="selectedSlot"
+          :selected-aesthetician="selectedAesthetician"
           @select-slot="selectTimeSlot"
           @next="nextStep"
           @prev="prevStep"

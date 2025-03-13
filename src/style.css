@@ -106,3 +106,334 @@ button:focus-visible {
   border-color: #d1c4e9;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+/* STYLE FOR TimeSelection */
+.time-selection-container {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Servicios arrastrables */
+.services-drag-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.service-drag-item {
+  background: #f0f4ff;
+  border-radius: 8px;
+  padding: 8px 12px;
+  min-width: 80px;
+  flex-grow: 1;
+  cursor: grab;
+  border-left: 4px solid #5c6bc0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.2s;
+  user-select: none;
+  display: flex;
+  align-items: center;
+}
+
+.service-drag-item:active {
+  cursor: grabbing;
+  transform: scale(0.98);
+}
+
+.service-drag-item.dragging {
+  opacity: 0.6;
+}
+
+.service-drag-item.service-dropped {
+  opacity: 0.5;
+  background: #e8eaf6;
+}
+
+.service-drag-item.service-selected {
+  background-color: #d1c4e9;
+  border-left: 4px solid #673ab7;
+  box-shadow: 0 0 0 2px #673ab7;
+}
+
+.service-content {
+  width: 100%;
+}
+
+.service-name {
+  font-weight: 500;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.service-duration {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.service-extras-info {
+  font-size: 0.7rem;
+  color: #5c6bc0;
+  font-style: italic;
+}
+
+/* Instrucciones para móviles */
+.mobile-drag-instructions {
+  background-color: #e8f5e9;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+/* Selector de semana */
+.week-selector {
+  border-radius: 8px;
+  background: #f5f5f5;
+  padding: 8px 12px;
+}
+
+.week-date-range {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.btn-icon {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Calendario adaptado a móvil */
+.calendar-mobile-wrapper {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+}
+
+.calendar-days-header {
+  display: flex;
+  background: #f9f9f9;
+  border-bottom: 1px solid #eee;
+}
+
+.calendar-day-header {
+  flex: 1;
+  min-width: 40px;
+  max-width: 50px;
+  padding: 8px 4px;
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.time-header {
+  min-width: 40px;
+  max-width: 40px;
+}
+
+.day-name {
+  font-weight: 500;
+}
+
+.day-number {
+  font-size: 0.85rem;
+}
+
+.calendar-scroll-container {
+  display: flex;
+  overflow-x: auto;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+  height: 600px;
+  overflow-y: auto;
+}
+
+.calendar-hours {
+  min-width: 40px;
+  max-width: 40px;
+  border-right: 1px solid #eee;
+  background: #f9f9f9;
+}
+
+.calendar-hour-cell {
+  height: 30px;
+  padding: 2px;
+  text-align: center;
+  font-size: 0.7rem;
+  color: #666;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-hour-cell.hour-label {
+  font-weight: 500;
+}
+
+.calendar-hour-cell.half-hour {
+  border-bottom: 1px dashed #eee;
+}
+
+.calendar-grid {
+  display: flex;
+  flex-grow: 1;
+}
+
+.calendar-day-column {
+  flex: 1;
+  min-width: 40px;
+  max-width: 50px;
+  border-right: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+}
+
+.calendar-time-cell {
+  height: 30px;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.calendar-time-cell.full-hour {
+  border-bottom: 1px solid #eee;
+}
+
+.calendar-time-cell.half-hour {
+  border-bottom: 1px dashed #eee;
+}
+
+.calendar-time-available {
+  background-color: #f0f4ff;
+  cursor: pointer;
+}
+
+.calendar-time-available:hover {
+  background-color: #e3f2fd;
+}
+
+.calendar-time-highlight {
+  background-color: rgba(103, 58, 183, 0.15);
+}
+
+.calendar-unavailable-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.05);
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 5px,
+    rgba(0, 0, 0, 0.05) 5px,
+    rgba(0, 0, 0, 0.05) 10px
+  );
+}
+
+.calendar-selected-service {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #673ab7;
+  color: white;
+  border-radius: 4px;
+  margin: 2px;
+  padding: 4px;
+  z-index: 2;
+  font-size: 0.7rem;
+  overflow: hidden;
+}
+
+.selected-service-name {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.selected-service-time {
+  font-size: 0.65rem;
+  opacity: 0.9;
+}
+
+.selected-service-duration {
+  font-size: 0.6rem;
+  opacity: 0.8;
+  font-style: italic;
+}
+
+/* Lista de horarios seleccionados */
+.selected-times-list {
+  background: #f5f7ff;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.selected-time-info {
+  background: #e8f5e9;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 0.9rem;
+  position: relative;
+}
+
+.btn-remove {
+  background-color: #f5f5f5;
+  color: #666;
+}
+
+.btn-remove:hover {
+  background-color: #ffebee;
+  color: #e53935;
+}
+
+/* Adaptaciones específicas para móviles */
+@media (max-width: 576px) {
+  .calendar-day-header, .calendar-day-column {
+    min-width: 38px;
+  }
+  
+  .time-header, .calendar-hours {
+    min-width: 30px;
+    max-width: 30px;
+  }
+  
+  .calendar-hour-cell {
+    padding: 2px;
+    font-size: 0.65rem;
+    height: 30px; /* Mantener consistente */
+  }
+  
+  .calendar-time-cell {
+    height: 30px; /* Mantener consistente */
+  }
+  
+  .calendar-scroll-container {
+    height: 600px; /* Altura consistente */
+  }
+  
+  .service-drag-item {
+    min-height: 44px;
+    touch-action: none; /* Prevenir gestos de desplazamiento durante el arrastre */
+  }
+}
