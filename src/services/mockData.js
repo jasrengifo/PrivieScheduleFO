@@ -145,7 +145,14 @@ export const availability = {
   bookedSlots: [
     // Lunes
     {
-      date: new Date().toISOString().split('T')[0].replace(/\d{1,2}$/, '01'), // Primer día de la semana actual
+      date: (() => {
+        const date = new Date();
+        const day = date.getDay(); // 0 es domingo, 1 es lunes, etc.
+        // Ajustar al lunes de la semana actual
+        const mondayOffset = day === 0 ? -6 : 1 - day; // Si es domingo, retroceder 6 días, sino calcular días hasta el lunes
+        date.setDate(date.getDate() + mondayOffset);
+        return date.toISOString().split('T')[0];
+      })(), // Lunes de la semana actual
       slots: [
         { start: '09:00', end: '09:45', aestheticianId: 1, serviceId: 1, clientName: 'Ana García', clientPhone: '+56912345678' },
         { start: '10:30', end: '11:30', aestheticianId: 1, serviceId: 2, clientName: 'Carmen Rodríguez', clientPhone: '+56923456789' },
@@ -155,7 +162,13 @@ export const availability = {
     },
     // Martes
     {
-      date: new Date().toISOString().split('T')[0].replace(/\d{1,2}$/, '02'), // Segundo día de la semana actual
+      date: (() => {
+        const date = new Date();
+        const day = date.getDay();
+        const mondayOffset = day === 0 ? -6 : 1 - day;
+        date.setDate(date.getDate() + mondayOffset + 1); // Lunes + 1 = Martes
+        return date.toISOString().split('T')[0];
+      })(),
       slots: [
         { start: '09:30', end: '10:15', aestheticianId: 1, serviceId: 1, clientName: 'Fernanda López', clientPhone: '+56956789012' },
         { start: '11:00', end: '12:00', aestheticianId: 2, serviceId: 2, clientName: 'Gabriela Soto', clientPhone: '+56967890123' },
@@ -165,7 +178,13 @@ export const availability = {
     },
     // Miércoles
     {
-      date: new Date().toISOString().split('T')[0].replace(/\d{1,2}$/, '03'), // Tercer día de la semana actual
+      date: (() => {
+        const date = new Date();
+        const day = date.getDay();
+        const mondayOffset = day === 0 ? -6 : 1 - day;
+        date.setDate(date.getDate() + mondayOffset + 2); // Lunes + 2 = Miércoles
+        return date.toISOString().split('T')[0];
+      })(),
       slots: [
         { start: '10:00', end: '10:45', aestheticianId: 2, serviceId: 1, clientName: 'Julia Morales', clientPhone: '+56990123456' },
         { start: '11:30', end: '12:30', aestheticianId: 3, serviceId: 2, clientName: 'Karla Navarro', clientPhone: '+56901234567' },
@@ -175,7 +194,13 @@ export const availability = {
     },
     // Jueves
     {
-      date: new Date().toISOString().split('T')[0].replace(/\d{1,2}$/, '04'), // Cuarto día de la semana actual
+      date: (() => {
+        const date = new Date();
+        const day = date.getDay();
+        const mondayOffset = day === 0 ? -6 : 1 - day;
+        date.setDate(date.getDate() + mondayOffset + 3); // Lunes + 3 = Jueves
+        return date.toISOString().split('T')[0];
+      })(),
       slots: [
         { start: '09:15', end: '10:00', aestheticianId: 3, serviceId: 1, clientName: 'Natalia Pinto', clientPhone: '+56934567890' },
         { start: '10:30', end: '11:30', aestheticianId: 1, serviceId: 2, clientName: 'Olivia Fuentes', clientPhone: '+56945678901' },
@@ -188,7 +213,13 @@ export const availability = {
     },
     // Viernes
     {
-      date: new Date().toISOString().split('T')[0].replace(/\d{1,2}$/, '05'), // Quinto día de la semana actual
+      date: (() => {
+        const date = new Date();
+        const day = date.getDay();
+        const mondayOffset = day === 0 ? -6 : 1 - day;
+        date.setDate(date.getDate() + mondayOffset + 4); // Lunes + 4 = Viernes
+        return date.toISOString().split('T')[0];
+      })(),
       slots: [
         { start: '09:00', end: '09:45', aestheticianId: 1, serviceId: 1, clientName: 'Úrsula Rivas', clientPhone: '+56990123456' },
         { start: '10:00', end: '11:00', aestheticianId: 2, serviceId: 2, clientName: 'Valentina Ortiz', clientPhone: '+56901234567' },
@@ -201,7 +232,13 @@ export const availability = {
     },
     // Sábado
     {
-      date: new Date().toISOString().split('T')[0].replace(/\d{1,2}$/, '06'), // Sexto día de la semana actual
+      date: (() => {
+        const date = new Date();
+        const day = date.getDay();
+        const mondayOffset = day === 0 ? -6 : 1 - day;
+        date.setDate(date.getDate() + mondayOffset + 5); // Lunes + 5 = Sábado
+        return date.toISOString().split('T')[0];
+      })(),
       slots: [
         { start: '10:00', end: '10:45', aestheticianId: 1, serviceId: 1, clientName: 'Beatriz Herrera', clientPhone: '+56956789012' },
         { start: '11:00', end: '12:00', aestheticianId: 2, serviceId: 2, clientName: 'Cecilia Flores', clientPhone: '+56967890123' },

@@ -129,25 +129,29 @@ export default {
             date.getFullYear() === today.getFullYear();
     },
     isTimeAvailable(date, time) {
-      // Si la fecha es anterior a hoy, no está disponible
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      
-      if (date < today) {
-        return false;
-      }
-      
-      // Verificar si el horario está ocupado según los datos
       const dateStr = this.formatDateISO(date);
       const timeHour = parseInt(time.split(':')[0]);
       const timeMinutes = parseInt(time.split(':')[1]);
       const timeInMinutes = timeHour * 60 + timeMinutes;
       
-      // Verificar en las reservas existentes
-      const bookedDay = this.existingBookings.find(day => day.date === dateStr);
+      // Verificar en las reservas existentes - solo usar una fuente de datos para evitar duplicados
+      // Priorizar los datos de availability si están disponibles, de lo contrario usar existingBookings
+      const dataSource = (this.availability && this.availability.bookedSlots) ? 
+                         this.availability.bookedSlots : this.existingBookings;
+      
+      const bookedDay = dataSource.find(day => day.date === dateStr);
+      
+      // Obtener la duración del servicio seleccionado (si hay uno)
+      let serviceDuration = 0;
+      if (this.touchSelectedService) {
+        serviceDuration = this.touchSelectedService.duration || 60; // Duración predeterminada de 60 minutos si no se especifica
+      }
+      
+      // Calcular el tiempo de finalización del nuevo servicio
+      const newServiceEndInMinutes = timeInMinutes + serviceDuration;
       
       if (bookedDay) {
-        // Comprobar si alguna reserva cae en esta hora
+        // Comprobar si alguna reserva se solapa con el nuevo servicio
         const isBooked = bookedDay.slots.some(slot => {
           // Verificar si el esteticista seleccionado coincide (si hay uno seleccionado)
           if (this.selectedAesthetician && slot.aestheticianId !== this.selectedAesthetician.id) {
@@ -162,37 +166,18 @@ export default {
           const slotEndMinutes = parseInt(slot.end.split(':')[1] || '0');
           const slotEndInMinutes = slotEndHour * 60 + slotEndMinutes;
           
-          // Verificar si hay superposición
-          return timeInMinutes >= slotStartInMinutes && timeInMinutes < slotEndInMinutes;
+          // Verificar si hay superposición entre el nuevo servicio y el existente
+          // Hay superposición si:
+          // 1. El inicio del nuevo servicio está dentro del rango del servicio existente
+          // 2. El fin del nuevo servicio está dentro del rango del servicio existente
+          // 3. El nuevo servicio abarca completamente al servicio existente
+          return (timeInMinutes >= slotStartInMinutes && timeInMinutes < slotEndInMinutes) || 
+                 (newServiceEndInMinutes > slotStartInMinutes && newServiceEndInMinutes <= slotEndInMinutes) ||
+                 (timeInMinutes <= slotStartInMinutes && newServiceEndInMinutes >= slotEndInMinutes);
         });
         
         if (isBooked) {
           return false;
-        }
-      }
-      
-      // También verificar en los datos de disponibilidad proporcionados
-      if (this.availability && this.availability.bookedSlots) {
-        const bookedDay = this.availability.bookedSlots.find(day => day.date === dateStr);
-        
-        if (bookedDay) {
-          // Comprobar si alguna reserva cae en esta hora
-          const isBooked = bookedDay.slots.some(slot => {
-            const slotStartHour = parseInt(slot.start.split(':')[0]);
-            const slotStartMinutes = parseInt(slot.start.split(':')[1] || '0');
-            const slotStartInMinutes = slotStartHour * 60 + slotStartMinutes;
-            
-            const slotEndHour = parseInt(slot.end.split(':')[0]);
-            const slotEndMinutes = parseInt(slot.end.split(':')[1] || '0');
-            const slotEndInMinutes = slotEndHour * 60 + slotEndMinutes;
-            
-            // Verificar si hay superposición
-            return timeInMinutes >= slotStartInMinutes && timeInMinutes < slotEndInMinutes;
-          });
-          
-          if (isBooked) {
-            return false;
-          }
         }
       }
       
@@ -209,6 +194,36 @@ export default {
       
       // Verificar si ya hay un servicio asignado para esta hora
       const conflicts = this.getAssignedServicesForTimeSlot(date, time);
+      
+      // Si no hay conflictos con los slots existentes, verificar si hay conflictos con los servicios programados
+      if (conflicts.length === 0 && serviceDuration > 0) {
+        // Verificar si el nuevo servicio se solapa con algún servicio programado
+        for (const slot of this.scheduledSlots) {
+          const slotDate = new Date(slot.date);
+          const slotDateStr = this.formatDateISO(slotDate);
+          
+          // Solo verificar si es el mismo día
+          if (slotDateStr === dateStr) {
+            // Convertir hora de inicio del servicio a minutos
+            const [slotHours, slotMinutes] = slot.time.split(':').map(Number);
+            const slotStartInMinutes = slotHours * 60 + slotMinutes;
+            
+            // Calcular hora de fin del servicio en minutos
+            const [endHours, endMinutes] = slot.endTime.split(':').map(Number);
+            const slotEndInMinutes = endHours * 60 + endMinutes;
+            
+            // Verificar si hay superposición entre el nuevo servicio y el existente
+            const hasOverlap = (timeInMinutes >= slotStartInMinutes && timeInMinutes < slotEndInMinutes) || 
+                              (newServiceEndInMinutes > slotStartInMinutes && newServiceEndInMinutes <= slotEndInMinutes) ||
+                              (timeInMinutes <= slotStartInMinutes && newServiceEndInMinutes >= slotEndInMinutes);
+            
+            if (hasOverlap) {
+              return false;
+            }
+          }
+        }
+      }
+      
       return conflicts.length === 0;
     },
     getAssignedServicesForTimeSlot(date, time) {
@@ -253,6 +268,50 @@ export default {
               } else {
                 slots.push(slot);
               }
+            }
+          }
+        }
+      }
+      
+      // Usar la misma fuente de datos que en isTimeAvailable para evitar duplicados
+      const dataSource = (this.availability && this.availability.bookedSlots) ? 
+                         this.availability.bookedSlots : this.existingBookings;
+      
+      // Añadir las reservas existentes de la esteticista seleccionada
+      if (dataSource && dataSource.length > 0) {
+        const bookedDay = dataSource.find(day => day.date === dateStr);
+        
+        if (bookedDay && bookedDay.slots) {
+          for (const bookedSlot of bookedDay.slots) {
+            // Verificar si el esteticista seleccionado coincide (si hay uno seleccionado)
+            if (this.selectedAesthetician && bookedSlot.aestheticianId !== this.selectedAesthetician.id) {
+              continue; // No es el mismo esteticista, así que no mostramos esta reserva
+            }
+            
+            // Convertir hora de inicio a minutos
+            const [bookedStartHours, bookedStartMinutes] = bookedSlot.start.split(':').map(Number);
+            const bookedStartInMinutes = bookedStartHours * 60 + bookedStartMinutes;
+            
+            // Verificar si este es el tiempo de inicio del slot reservado
+            if (slotTimeInMinutes === bookedStartInMinutes) {
+              // Calcular duración en minutos
+              const [bookedEndHours, bookedEndMinutes] = bookedSlot.end.split(':').map(Number);
+              const bookedEndInMinutes = bookedEndHours * 60 + bookedEndMinutes;
+              const durationMinutes = bookedEndInMinutes - bookedStartInMinutes;
+              
+              // Crear un objeto visual para la reserva existente
+              const existingBookingSlot = {
+                time: bookedSlot.start,
+                endTime: bookedSlot.end,
+                duration: this.getServiceHeight(durationMinutes),
+                serviceId: bookedSlot.serviceId,
+                totalDuration: durationMinutes,
+                isExistingBooking: true,
+                clientName: bookedSlot.clientName || 'Cliente',
+                aestheticianId: bookedSlot.aestheticianId
+              };
+              
+              slots.push(existingBookingSlot);
             }
           }
         }

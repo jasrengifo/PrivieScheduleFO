@@ -347,8 +347,54 @@ export default {
     loadExistingBookings() {
       if (mockAvailability && mockAvailability.bookedSlots) {
         this.existingBookings = mockAvailability.bookedSlots;
+        
+        // Actualizar cuando cambia el esteticista seleccionado
+        this.updateBookingsForAesthetician();
       }
+    },
+    
+    // Método para actualizar las reservas según el esteticista seleccionado
+    updateBookingsForAesthetician() {
+      // Si no hay esteticista seleccionado, mostrar todas las reservas
+      if (!this.selectedAesthetician) {
+        return;
+      }
+      
+      // Filtrar las reservas para mostrar solo las del esteticista seleccionado
+      // Nota: No modificamos this.existingBookings directamente para mantener los datos originales
+      console.log('Filtrando reservas para esteticista:', this.selectedAesthetician.name);
+      
+      // Verificar que tenemos datos de reservas
+      if (!mockAvailability || !mockAvailability.bookedSlots) {
+        return;
+      }
+      
+      // Crear una copia filtrada de las reservas
+      this.existingBookings = mockAvailability.bookedSlots.map(day => {
+        // Crear una copia del día
+        const filteredDay = { ...day };
+        
+        // Filtrar los slots para mostrar solo los del esteticista seleccionado
+        filteredDay.slots = day.slots.filter(slot => 
+          slot.aestheticianId === this.selectedAesthetician.id
+        );
+        
+        return filteredDay;
+      });
+      
+      console.log('Reservas filtradas:', this.existingBookings);
     }
-  }
+  },
+  watch: {
+    selectedAesthetician: {
+      handler(newValue) {
+        if (newValue) {
+          console.log('Esteticista seleccionado cambiado:', newValue.name);
+          this.updateBookingsForAesthetician();
+        }
+      },
+      immediate: true
+    }
+  },
 };
 </script>
