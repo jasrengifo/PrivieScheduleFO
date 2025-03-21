@@ -1,0 +1,285 @@
+<template>
+  <section class="timeline-section py-5">
+    <div class="container">
+      <div class="row text-center mb-5">
+        <div class="col-lg-8 mx-auto">
+          <h2 class="fw-bold text-white mb-3">Transforma tu Negocio en 4 Pasos</h2>
+          <p class="text-white-50 lead">Implementación rápida y sin complicaciones para empezar a ver resultados de inmediato</p>
+        </div>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-container" v-for="(step, index) in steps" :key="index" :class="{ 'right': index % 2 !== 0 }">
+          <div class="timeline-card">
+            <div class="timeline-icon">
+              <i :class="step.icon"></i>
+            </div>
+            <div class="timeline-content">
+              <h3 class="timeline-title">{{ step.title }}</h3>
+              <p class="timeline-text">{{ step.description }}</p>
+              <div class="timeline-feature" v-if="step.highlight">
+                <span class="badge bg-primary">{{ step.highlight }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-5">
+        <div class="col-12 text-center">
+          <div class="timeline-cta card mx-auto">
+            <div class="card-body p-4">
+              <h4 class="card-title mb-3">¿Listo para empezar?</h4>
+              <p class="card-text mb-4">Únete a los cientos de salones que ya mejoraron su negocio con nuestra plataforma</p>
+              <button class="btn btn-gradient btn-lg">Comenzar mi Prueba Gratuita</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>
+
+<script>
+export default {
+  name: 'TimeLineSection',
+  data() {
+    return {
+      steps: [
+        {
+          title: "Configura tu Cuenta",
+          description: "Regístrate y personaliza tu espacio con los servicios y especialistas de tu salón en menos de 30 minutos. Nuestro asistente te guía en cada paso.",
+          icon: "fas fa-user-plus",
+          highlight: "Sin conocimientos técnicos"
+        },
+        {
+          title: "Personaliza tu Agenda",
+          description: "Define horarios, bloquea fechas especiales y establece reglas de agendamiento. La IA optimizará automáticamente tus citas basándose en estas preferencias.",
+          icon: "fas fa-sliders-h",
+          highlight: "Adaptado a tu negocio"
+        },
+        {
+          title: "Integra WhatsApp",
+          description: "Conecta tu número de WhatsApp Business y configura el asistente virtual. Tus clientes podrán agendar citas mediante mensajes sin necesidad de aplicaciones adicionales.",
+          icon: "fab fa-whatsapp",
+          highlight: "Activación instantánea"
+        },
+        {
+          title: "Empieza a Recibir Reservas",
+          description: "Invita a tus clientes a agendar por WhatsApp o comparte tu link personalizado. Comienza a ver resultados desde el primer día y olvídate de las agendas en papel.",
+          icon: "fas fa-calendar-check",
+          highlight: "Resultados inmediatos"
+        }
+      ]
+    }
+  }
+}
+</script>
+
+<style scoped>
+.timeline-section {
+  background: linear-gradient(135deg, #673ab7 0%, #512da8 100%);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.timeline-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(149, 117, 205, 0.3) 0%, transparent 100%),
+    radial-gradient(circle at 90% 80%, rgba(149, 117, 205, 0.3) 0%, transparent 100%);
+  z-index: 1;
+}
+
+.container {
+  position: relative;
+  z-index: 2;
+}
+
+/* Timeline Styles */
+.timeline {
+  position: relative;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.timeline::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  margin-left: -3px;
+  border-radius: 10px;
+}
+
+.timeline-container {
+  position: relative;
+  width: 50%;
+  padding: 20px 40px;
+}
+
+.timeline-container.right {
+  left: 50%;
+}
+
+.timeline-container::after {
+  content: '';
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  right: -12px;
+  background-color: white;
+  border: 4px solid #ff4081;
+  top: 35px;
+  border-radius: 50%;
+  z-index: 1;
+  box-shadow: 0 0 0 5px rgba(255, 64, 129, 0.2);
+}
+
+.timeline-container.right::after {
+  left: -12px;
+}
+
+.timeline-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.timeline-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.timeline-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(45deg, #ff4081, #e040fb);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.timeline-icon i {
+  font-size: 24px;
+  color: white;
+}
+
+.timeline-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.timeline-text {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.timeline-feature {
+  margin-top: 15px;
+}
+
+.timeline-feature .badge {
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  background: #ff4081;
+  border-radius: 20px;
+  font-weight: 600;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.timeline-cta {
+  max-width: 600px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.btn-gradient {
+  background: linear-gradient(45deg, #ff4081, #e040fb);
+  border: none;
+  color: white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-gradient:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(45deg, #e040fb, #ff4081);
+}
+
+@media (max-width: 991.98px) {
+  .timeline::after {
+    left: 31px;
+  }
+  
+  .timeline-container {
+    width: 100%;
+    padding-left: 70px;
+    padding-right: 25px;
+    left: 0;
+  }
+  
+  .timeline-container.right {
+    left: 0;
+  }
+  
+  .timeline-container::after {
+    left: 19px;
+    right: auto;
+  }
+  
+  .timeline-container.right::after {
+    left: 19px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .timeline-card {
+    padding: 20px;
+  }
+  
+  .timeline-icon {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .timeline-icon i {
+    font-size: 20px;
+  }
+  
+  .timeline-title {
+    font-size: 1.1rem;
+  }
+  
+  .timeline-text {
+    font-size: 0.9rem;
+  }
+}
+</style>
