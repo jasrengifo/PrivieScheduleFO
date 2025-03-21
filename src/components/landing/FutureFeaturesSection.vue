@@ -3,8 +3,8 @@
     <div class="container">
       <div class="row justify-content-center mb-5">
         <div class="col-lg-8 text-center">
-          <h2 class="section-title">El Futuro de la Belleza Está Aquí</h2>
-          <p class="section-subtitle">Descubre las próximas funcionalidades que transformarán tu negocio</p>
+          <h2 class="section-title">{{ sectionTitle }}</h2>
+          <p class="section-subtitle">{{ sectionSubtitle }}</p>
         </div>
       </div>
 
@@ -66,8 +66,8 @@
 
       <div class="row mt-5">
         <div class="col-12 text-center">
-          <p class="future-cta-text">¿Te gustaría priorizar alguna funcionalidad?</p>
-          <button class="btn btn-gradient btn-lg">Cuéntanos tu Opinión</button>
+          <p class="future-cta-text">{{ ctaTitle }}</p>
+          <button class="btn btn-gradient btn-lg">{{ ctaButton }}</button>
         </div>
       </div>
     </div>
@@ -75,8 +75,14 @@
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n'
+
 export default {
   name: 'FutureFeaturesSection',
+  setup() {
+    const { locale } = useI18n();
+    return { locale };
+  },
   data() {
     return {
       activeFeature: 0,
@@ -90,31 +96,65 @@ export default {
           title: "Inteligencia Predictiva de Clientes",
           description: "Analiza los patrones de tus clientes para predecir futuras visitas, preferencias y servicios que podrían interesarles. Anticipa necesidades y ofrece recomendaciones personalizadas para aumentar la satisfacción y el valor del cliente.",
           icon: "fas fa-brain",
-          image: "https://picsum.photos/600/400?random=10",
+          image: "/img/landing/aianalitics.webp",
           tags: ["IA Avanzada", "Próximamente", "Personalización"]
         },
         {
           title: "Inventario Inteligente y Alertas",
           description: "Gestión automatizada de inventario que se sincroniza con tus servicios. Recibe alertas predictivas cuando los productos estén por agotarse basadas en reservas futuras y tendencias de uso, eliminando el desperdicio y la falta de stock.",
           icon: "fas fa-box-open",
-          image: "https://picsum.photos/600/400?random=11",
+          image: "/img/landing/aiinventory.webp",
           tags: ["Automatización", "En desarrollo", "Gestión"]
         },
         {
           title: "Experiencia de Realidad Aumentada",
           description: "Permite a tus clientes probar virtualmente peinados, colores y tratamientos antes de su cita. Integra fotografías reales con simulación 3D para visualizar resultados, aumentando la seguridad en la decisión y reduciendo insatisfacciones.",
           icon: "fas fa-vr-cardboard",
-          image: "https://picsum.photos/600/400?random=12",
+          image: "/img/landing/aifilter.webp",
           tags: ["Innovación", "Futuro cercano", "Experiencia cliente"]
         },
         {
           title: "Programa de Fidelización con IA",
           description: "Sistema de recompensas personalizado que aprende de las preferencias individuales de cada cliente. La IA sugiere las recompensas más efectivas para cada perfil, maximizando la retención y el valor del cliente a largo plazo.",
           icon: "fas fa-gift",
-          image: "https://picsum.photos/600/400?random=13",
+          image: "/img/landing/fidelize.webp",
           tags: ["Fidelización", "Próximo trimestre", "Rentabilidad"]
         }
       ]
+    }
+  },
+  computed: {
+    sectionTitle() {
+      const titles = {
+        'pt': 'O Futuro do Seu Salão Está Chegando',
+        'es': 'El Futuro de Tu Salón Está Llegando',
+        'en': 'The Future of Your Salon is Coming'
+      };
+      return titles[this.locale] || titles.pt;
+    },
+    sectionSubtitle() {
+      const subtitles = {
+        'pt': 'Conheça as novidades que estamos desenvolvendo para tornar seu negócio ainda mais eficiente',
+        'es': 'Conoce las novedades que estamos desarrollando para hacer tu negocio aún más eficiente',
+        'en': 'Discover the innovations we are developing to make your business even more efficient'
+      };
+      return subtitles[this.locale] || subtitles.pt;
+    },
+    ctaTitle() {
+      const titles = {
+        'pt': 'Quer Prioridade nas Novas Funcionalidades?',
+        'es': '¿Quieres Prioridad en las Nuevas Funcionalidades?',
+        'en': 'Want Priority for New Features?'
+      };
+      return titles[this.locale] || titles.pt;
+    },
+    ctaButton() {
+      const buttons = {
+        'pt': 'Inscrever-se',
+        'es': 'Inscribirse',
+        'en': 'Sign Up'
+      };
+      return buttons[this.locale] || buttons.pt;
     }
   },
   mounted() {

@@ -3,13 +3,13 @@
     <div class="container">
       <div class="row text-center mb-5">
         <div class="col-lg-8 mx-auto">
-          <h2 class="fw-bold text-white mb-3">Transforma tu Negocio en 4 Pasos</h2>
-          <p class="text-white-50 lead">Implementación rápida y sin complicaciones para empezar a ver resultados de inmediato</p>
+          <h2 class="fw-bold text-white mb-3">{{ timelineTitle }}</h2>
+          <p class="text-white-50 lead">{{ timelineSubtitle }}</p>
         </div>
       </div>
 
       <div class="timeline">
-        <div class="timeline-container" v-for="(step, index) in steps" :key="index" :class="{ 'right': index % 2 !== 0 }">
+        <div class="timeline-container" v-for="(step, index) in timelineSteps" :key="index" :class="{ 'right': index % 2 !== 0 }">
           <div class="timeline-card">
             <div class="timeline-icon">
               <i :class="step.icon"></i>
@@ -29,9 +29,9 @@
         <div class="col-12 text-center">
           <div class="timeline-cta card mx-auto">
             <div class="card-body p-4">
-              <h4 class="card-title mb-3">¿Listo para empezar?</h4>
-              <p class="card-text mb-4">Únete a los cientos de salones que ya mejoraron su negocio con nuestra plataforma</p>
-              <button class="btn btn-gradient btn-lg">Comenzar mi Prueba Gratuita</button>
+              <h4 class="card-title mb-3">{{ timelineCTA.title }}</h4>
+              <p class="card-text mb-4">{{ timelineCTA.description }}</p>
+              <button class="btn btn-gradient btn-lg">{{ timelineCTA.button }}</button>
             </div>
           </div>
         </div>
@@ -41,36 +41,135 @@
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n'
+
 export default {
   name: 'TimeLineSection',
-  data() {
-    return {
-      steps: [
-        {
-          title: "Configura tu Cuenta",
-          description: "Regístrate y personaliza tu espacio con los servicios y especialistas de tu salón en menos de 30 minutos. Nuestro asistente te guía en cada paso.",
-          icon: "fas fa-user-plus",
-          highlight: "Sin conocimientos técnicos"
+  setup() {
+    const { locale } = useI18n();
+    return { locale };
+  },
+  computed: {
+    timelineTitle() {
+      const titles = {
+        'pt': 'Transforme seu Negócio em 4 Passos',
+        'es': 'Transforma tu Negocio en 4 Pasos',
+        'en': 'Transform Your Business in 4 Steps'
+      };
+      return titles[this.locale] || titles.pt;
+    },
+    timelineSubtitle() {
+      const subtitles = {
+        'pt': 'Implementação rápida e descomplicada para começar a ver resultados imediatamente',
+        'es': 'Implementación rápida y sin complicaciones para empezar a ver resultados de inmediato',
+        'en': 'Quick and straightforward implementation to start seeing results immediately'
+      };
+      return subtitles[this.locale] || subtitles.pt;
+    },
+    timelineSteps() {
+      const steps = {
+        'pt': [
+          {
+            title: "Configure sua Conta",
+            description: "Registre-se e personalize seu espaço com os serviços e especialistas do seu salão em menos de 30 minutos. Nosso assistente guiará você em cada etapa.",
+            icon: "fas fa-user-plus",
+            highlight: "Sem conhecimentos técnicos"
+          },
+          {
+            title: "Personalize sua Agenda",
+            description: "Defina horários, bloqueie datas especiais e estabeleça regras de agendamento. A IA otimizará automaticamente seus compromissos com base nessas preferências.",
+            icon: "fas fa-sliders-h",
+            highlight: "Adaptado ao seu negócio"
+          },
+          {
+            title: "Integre o WhatsApp",
+            description: "Conecte seu número do WhatsApp Business e configure o assistente virtual. Seus clientes poderão agendar compromissos por mensagens sem a necessidade de aplicativos adicionais.",
+            icon: "fab fa-whatsapp",
+            highlight: "Ativação instantânea"
+          },
+          {
+            title: "Comece a Receber Reservas",
+            description: "Convide seus clientes para agendar pelo WhatsApp ou compartilhe seu link personalizado. Comece a ver resultados desde o primeiro dia e esqueça as agendas em papel.",
+            icon: "fas fa-calendar-check",
+            highlight: "Resultados imediatos"
+          }
+        ],
+        'es': [
+          {
+            title: "Configura tu Cuenta",
+            description: "Regístrate y personaliza tu espacio con los servicios y especialistas de tu salón en menos de 30 minutos. Nuestro asistente te guía en cada paso.",
+            icon: "fas fa-user-plus",
+            highlight: "Sin conocimientos técnicos"
+          },
+          {
+            title: "Personaliza tu Agenda",
+            description: "Define horarios, bloquea fechas especiales y establece reglas de agendamiento. La IA optimizará automáticamente tus citas basándose en estas preferencias.",
+            icon: "fas fa-sliders-h",
+            highlight: "Adaptado a tu negocio"
+          },
+          {
+            title: "Integra WhatsApp",
+            description: "Conecta tu número de WhatsApp Business y configura el asistente virtual. Tus clientes podrán agendar citas mediante mensajes sin necesidad de aplicaciones adicionales.",
+            icon: "fab fa-whatsapp",
+            highlight: "Activación instantánea"
+          },
+          {
+            title: "Empieza a Recibir Reservas",
+            description: "Invita a tus clientes a agendar por WhatsApp o comparte tu link personalizado. Comienza a ver resultados desde el primer día y olvídate de las agendas en papel.",
+            icon: "fas fa-calendar-check",
+            highlight: "Resultados inmediatos"
+          }
+        ],
+        'en': [
+          {
+            title: "Set Up Your Account",
+            description: "Register and customize your space with your salon's services and specialists in less than 30 minutes. Our assistant guides you through each step.",
+            icon: "fas fa-user-plus",
+            highlight: "No technical knowledge"
+          },
+          {
+            title: "Customize Your Schedule",
+            description: "Define hours, block special dates, and establish scheduling rules. The AI will automatically optimize your appointments based on these preferences.",
+            icon: "fas fa-sliders-h",
+            highlight: "Tailored to your business"
+          },
+          {
+            title: "Integrate WhatsApp",
+            description: "Connect your WhatsApp Business number and configure the virtual assistant. Your clients will be able to schedule appointments via messages without additional apps.",
+            icon: "fab fa-whatsapp",
+            highlight: "Instant activation"
+          },
+          {
+            title: "Start Receiving Bookings",
+            description: "Invite your clients to book via WhatsApp or share your personalized link. Start seeing results from day one and forget about paper agendas.",
+            icon: "fas fa-calendar-check",
+            highlight: "Immediate results"
+          }
+        ]
+      };
+      
+      return steps[this.locale] || steps.pt;
+    },
+    timelineCTA() {
+      const ctas = {
+        'pt': {
+          title: 'Pronto para começar?',
+          description: 'Junte-se às centenas de salões que já melhoraram seus negócios com nossa plataforma',
+          button: 'Iniciar meu Teste Gratuito'
         },
-        {
-          title: "Personaliza tu Agenda",
-          description: "Define horarios, bloquea fechas especiales y establece reglas de agendamiento. La IA optimizará automáticamente tus citas basándose en estas preferencias.",
-          icon: "fas fa-sliders-h",
-          highlight: "Adaptado a tu negocio"
+        'es': {
+          title: '¿Listo para empezar?',
+          description: 'Únete a los cientos de salones que ya mejoraron su negocio con nuestra plataforma',
+          button: 'Comenzar mi Prueba Gratuita'
         },
-        {
-          title: "Integra WhatsApp",
-          description: "Conecta tu número de WhatsApp Business y configura el asistente virtual. Tus clientes podrán agendar citas mediante mensajes sin necesidad de aplicaciones adicionales.",
-          icon: "fab fa-whatsapp",
-          highlight: "Activación instantánea"
-        },
-        {
-          title: "Empieza a Recibir Reservas",
-          description: "Invita a tus clientes a agendar por WhatsApp o comparte tu link personalizado. Comienza a ver resultados desde el primer día y olvídate de las agendas en papel.",
-          icon: "fas fa-calendar-check",
-          highlight: "Resultados inmediatos"
+        'en': {
+          title: 'Ready to get started?',
+          description: 'Join hundreds of salons that have already improved their business with our platform',
+          button: 'Start My Free Trial'
         }
-      ]
+      };
+      
+      return ctas[this.locale] || ctas.pt;
     }
   }
 }
@@ -83,6 +182,8 @@ export default {
   position: relative;
   overflow: hidden;
 }
+
+
 
 .timeline-section::before {
   content: '';
@@ -217,6 +318,7 @@ export default {
   border-radius: 15px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  color: white;
 }
 
 .btn-gradient {

@@ -3,14 +3,19 @@
     <div class="container">
       <div class="row justify-content-center mb-5">
         <div class="col-lg-8 text-center">
-          <h2 class="section-title">Beneficios que Transforman tu Negocio</h2>
-          <p class="section-subtitle">Descubre cómo nuestra plataforma resuelve los mayores desafíos de tu salón de belleza</p>
+          <h2 class="section-title" ref="sectionTitle">
+            <!-- Usar texto estático temporalmente para diagnóstico -->
+            {{ currentLanguageTitle }}
+          </h2>
+          <p class="section-subtitle">
+            {{ currentLanguageSubtitle }}
+          </p>
         </div>
       </div>
 
       <div class="benefits-grid">
         <div class="row g-4">
-          <div class="col-md-6 col-lg-4" v-for="(benefit, index) in benefits" :key="index">
+          <div class="col-md-6 col-lg-4" v-for="(benefit, index) in benefitItems" :key="index" :ref="el => { if (el) benefitRefs[index] = el }">
             <div class="benefit-card" 
                  :class="{'benefit-visible': benefitInView[index]}" 
                  ref="benefitCards">
@@ -36,9 +41,15 @@
       <div class="row mt-5">
         <div class="col-12 text-center">
           <div class="benefits-cta">
-            <h4 class="benefits-cta-title">¿Listo para impulsar tu negocio?</h4>
-            <p class="benefits-cta-text">Únete a los cientos de salones que ya están experimentando estos beneficios</p>
-            <button class="btn btn-gradient btn-lg">Comenzar Ahora</button>
+            <h4 class="benefits-cta-title">
+              {{ ctaTitle }}
+            </h4>
+            <p class="benefits-cta-text">
+              {{ ctaDescription }}
+            </p>
+            <button class="btn btn-gradient btn-lg">
+              {{ ctaButton }}
+            </button>
           </div>
         </div>
       </div>
@@ -47,73 +58,190 @@
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n'
+
 export default {
   name: 'BenefitsSection',
+  setup() {
+    const { locale } = useI18n();
+    return { locale };
+  },
   data() {
     return {
       benefitInView: [],
       benefitObservers: [],
-      benefits: [
-        {
-          icon: 'fas fa-clock',
-          title: 'Ahorra Tiempo Valioso',
-          description: 'Reduce hasta un 80% el tiempo dedicado a gestionar citas. Automatiza recordatorios, confirmaciones y reagendamientos para enfocarte en lo que realmente importa: tus clientes.',
-          stat: {
-            value: '15h',
-            label: 'ahorradas por semana'
+      benefitRefs: [],
+      observer: null
+    }
+  },
+  computed: {
+    // Obtener el título según el idioma actual
+    currentLanguageTitle() {
+      const titles = {
+        'pt': 'Benefícios para o seu Salão',
+        'es': 'Beneficios para tu Salón',
+        'en': 'Benefits for Your Salon'
+      };
+      return titles[this.locale] || titles.pt;
+    },
+    // Obtener el subtítulo según el idioma actual
+    currentLanguageSubtitle() {
+      const subtitles = {
+        'pt': 'Descubra como nossa plataforma transforma seu negócio de beleza',
+        'es': 'Descubre cómo nuestra plataforma transforma tu negocio de belleza',
+        'en': 'Discover how our platform transforms your beauty business'
+      };
+      return subtitles[this.locale] || subtitles.pt;
+    },
+    benefitItems() {
+      // Usar textos estáticos para diagnóstico según el idioma actual
+      const items = {
+        'pt': [
+          {
+            icon: 'fas fa-clock',
+            title: 'Economia de Tempo',
+            description: 'Reduza em até 70% o tempo gasto em tarefas administrativas',
+            stat: { value: '15h', label: 'horas economizadas por semana' }
+          },
+          {
+            icon: 'fas fa-ban',
+            title: 'Redução de Cancelamentos',
+            description: 'Minimize cancelamentos de última hora e faltas com lembretes',
+            stat: { value: '-68%', label: 'em cancelamentos' }
+          },
+          {
+            icon: 'fas fa-mobile-alt',
+            title: 'Conveniência Total',
+            description: 'Seus clientes podem marcar compromissos 24/7 pelo WhatsApp',
+            stat: { value: '30%', label: 'mais agendamentos' }
+          },
+          {
+            icon: 'fas fa-user-friends',
+            title: 'Satisfação Garantida',
+            description: 'Melhore a experiência dos clientes com processo simplificado',
+            stat: { value: '+45%', label: 'em retenção' }
+          },
+          {
+            icon: 'fas fa-chart-pie',
+            title: 'Aumento de Receita',
+            description: 'Aumente sua taxa de ocupação e aproveite melhor sua capacidade',
+            stat: { value: '22%', label: 'aumento em vendas' }
+          },
+          {
+            icon: 'fas fa-cogs',
+            title: 'Automação Inteligente',
+            description: 'IA cuida do agendamento, confirmações e redistribuição',
+            stat: { value: '3', label: 'dias para implementar' }
           }
-        },
-        {
-          icon: 'fas fa-ban',
-          title: 'Reduce Cancelaciones',
-          description: 'El sistema de confirmación inteligente y los recordatorios automáticos por WhatsApp disminuyen drásticamente las cancelaciones de última hora y los clientes que no asisten.',
-          stat: {
-            value: '-68%',
-            label: 'en cancelaciones'
+        ],
+        'es': [
+          {
+            icon: 'fas fa-clock',
+            title: 'Ahorro de Tiempo',
+            description: 'Reduce hasta un 70% el tiempo en tareas administrativas',
+            stat: { value: '15h', label: 'ahorradas por semana' }
+          },
+          {
+            icon: 'fas fa-ban',
+            title: 'Reducción de Cancelaciones',
+            description: 'Minimiza cancelaciones de última hora con recordatorios',
+            stat: { value: '-68%', label: 'en cancelaciones' }
+          },
+          {
+            icon: 'fas fa-mobile-alt',
+            title: 'Comodidad Total',
+            description: 'Tus clientes pueden agendar citas 24/7 por WhatsApp',
+            stat: { value: '30%', label: 'más reservas' }
+          },
+          {
+            icon: 'fas fa-user-friends',
+            title: 'Satisfacción Garantizada',
+            description: 'Mejora la experiencia del cliente con proceso simple',
+            stat: { value: '+45%', label: 'en retención' }
+          },
+          {
+            icon: 'fas fa-chart-pie',
+            title: 'Aumento de Ingresos',
+            description: 'Incrementa tu ocupación y aprovecha mejor tu capacidad',
+            stat: { value: '22%', label: 'aumento en ventas' }
+          },
+          {
+            icon: 'fas fa-cogs',
+            title: 'Automatización Inteligente',
+            description: 'IA se encarga de las citas, confirmaciones y redistribución',
+            stat: { value: '3', label: 'días para implementar' }
           }
-        },
-        {
-          icon: 'fas fa-mobile-alt',
-          title: 'Accesibilidad 24/7',
-          description: 'Tus clientes pueden agendar citas en cualquier momento, incluso fuera del horario laboral. Sin llamadas perdidas, sin esperas y sin complicaciones.',
-          stat: {
-            value: '30%',
-            label: 'más reservas'
+        ],
+        'en': [
+          {
+            icon: 'fas fa-clock',
+            title: 'Time Savings',
+            description: 'Reduce time spent on administrative tasks by up to 70%',
+            stat: { value: '15h', label: 'hours saved per week' }
+          },
+          {
+            icon: 'fas fa-ban',
+            title: 'Reduced Cancellations',
+            description: 'Minimize last-minute cancellations with automatic reminders',
+            stat: { value: '-68%', label: 'in cancellations' }
+          },
+          {
+            icon: 'fas fa-mobile-alt',
+            title: 'Total Convenience',
+            description: 'Your clients can book appointments 24/7 through WhatsApp',
+            stat: { value: '30%', label: 'more bookings' }
+          },
+          {
+            icon: 'fas fa-user-friends',
+            title: 'Guaranteed Satisfaction',
+            description: 'Enhance customer experience with simplified process',
+            stat: { value: '+45%', label: 'in retention' }
+          },
+          {
+            icon: 'fas fa-chart-pie',
+            title: 'Revenue Increase',
+            description: 'Boost your occupancy rate and make better use of capacity',
+            stat: { value: '22%', label: 'sales increase' }
+          },
+          {
+            icon: 'fas fa-cogs',
+            title: 'Smart Automation',
+            description: 'AI takes care of scheduling, confirmations and redistribution',
+            stat: { value: '3', label: 'days to implement' }
           }
-        },
-        {
-          icon: 'fas fa-user-friends',
-          title: 'Fideliza a tus Clientes',
-          description: 'La experiencia fluida de reserva y el seguimiento personalizado aumentan la satisfacción y lealtad de tus clientes, generando más recomendaciones y visitas recurrentes.',
-          stat: {
-            value: '+45%',
-            label: 'en retención'
-          }
-        },
-        {
-          icon: 'fas fa-chart-pie',
-          title: 'Insights Reveladores',
-          description: 'Analiza tendencias, horas pico y servicios más solicitados. Toma decisiones estratégicas basadas en datos reales que impactan directamente en tu rentabilidad.',
-          stat: {
-            value: '22%',
-            label: 'aumento en ventas'
-          }
-        },
-        {
-          icon: 'fas fa-cogs',
-          title: 'Integración Perfecta',
-          description: 'Se adapta a tu flujo de trabajo actual sin interrupciones. Compatible con tus herramientas y sistemas existentes, permitiendo una transición suave y sin complicaciones.',
-          stat: {
-            value: '3',
-            label: 'días para implementar'
-          }
-        }
-      ]
+        ]
+      };
+      
+      return items[this.locale] || items.pt;
+    },
+    ctaTitle() {
+      const titles = {
+        'pt': 'Pronto para transformar seu salão?',
+        'es': '¿Listo para transformar tu salón?',
+        'en': 'Ready to transform your salon?'
+      };
+      return titles[this.locale] || titles.pt;
+    },
+    ctaDescription() {
+      const descriptions = {
+        'pt': 'Comece agora com 14 dias gratuitos, sem necessidade de cartão de crédito',
+        'es': 'Comienza ahora con 14 días gratuitos, sin necesidad de tarjeta de crédito',
+        'en': 'Start now with 14 days free, no credit card required'
+      };
+      return descriptions[this.locale] || descriptions.pt;
+    },
+    ctaButton() {
+      const buttons = {
+        'pt': 'Começar Agora',
+        'es': 'Empezar Ahora',
+        'en': 'Get Started'
+      };
+      return buttons[this.locale] || buttons.pt;
     }
   },
   mounted() {
     // Inicializar array de beneficios visibles
-    this.benefitInView = new Array(this.benefits.length).fill(false);
+    this.benefitInView = new Array(this.benefitItems.length).fill(false);
     
     // Configurar observers para animación al entrar en viewport
     this.$nextTick(() => {
@@ -133,12 +261,51 @@ export default {
         });
       }
     });
+
+    this.setupIntersectionObserver();
   },
   beforeUnmount() {
     // Limpiar observers cuando el componente se desmonte
     this.benefitObservers.forEach(observer => {
       observer.disconnect();
     });
+
+    // Limpiar el observer cuando el componente se desmonta
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+  },
+  methods: {
+    setupIntersectionObserver() {
+      // Configurar el observador de intersección para animar los elementos
+      this.observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('animate');
+              // Una vez animado, dejar de observar
+              this.observer.unobserve(entry.target);
+            }
+          });
+        },
+        {
+          threshold: 0.1,
+          rootMargin: '0px 0px -100px 0px'
+        }
+      );
+
+      // Observar el título
+      if (this.$refs.sectionTitle) {
+        this.observer.observe(this.$refs.sectionTitle);
+      }
+
+      // Observar cada tarjeta de beneficios
+      this.benefitRefs.forEach((ref) => {
+        if (ref) {
+          this.observer.observe(ref);
+        }
+      });
+    }
   }
 }
 </script>
@@ -176,6 +343,14 @@ export default {
   background: linear-gradient(90deg, #ffffff, #e0e7ff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease;
+}
+
+.section-title.animate {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .section-subtitle {

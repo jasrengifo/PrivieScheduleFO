@@ -1,0 +1,172 @@
+{
+  "hero": {
+    "title": "Your Beauty Business, Simplified",
+    "subtitle": "Smart scheduling system that automates appointments and optimizes your clients' experience.",
+    "buttons": {
+      "start": "Get Started",
+      "demo": "View Demo"
+    }
+  },
+  "features": {
+    "title": "Featured Functionalities",
+    "subtitle": "Everything you need to manage your salon"
+  },
+  "ai": {
+    "title": "Power Your Salon with Artificial Intelligence",
+    "subtitle": "Our smart tools automate tasks and maximize your productivity",
+    "features": {
+      "scheduling": {
+        "title": "Smart Scheduling",
+        "description": "Optimize spaces in your calendar and reduce downtime",
+        "metric": "more appointments served"
+      },
+      "assistant": {
+        "title": "WhatsApp Assistant",
+        "description": "Automatic responses to frequent questions and scheduling without human intervention",
+        "metric": "customer service"
+      },
+      "analytics": {
+        "title": "Predictive Analytics",
+        "description": "Anticipate demand trends and optimize your inventory",
+        "metric": "cost reduction"
+      },
+      "matching": {
+        "title": "Client-Specialist Matching",
+        "description": "Automatically assign the ideal professional for each client",
+        "metric": "customer satisfaction"
+      }
+    },
+    "ctaBanner": {
+      "title": "Enhance your clients' experience with the power of AI",
+      "subtitle": "Automate repetitive tasks and focus on what really matters: growing your business",
+      "button": "Try it now"
+    }
+  },
+  "contact": {
+    "title": "Let's Talk About Your Business",
+    "subtitle": "We're here to answer your questions and help you boost your beauty salon",
+    "welcome": {
+      "title": "Welcome to Your Digital Transformation!",
+      "description": "Fill out the form and a specialist will contact you to show how our platform can adapt to your specific needs.",
+      "satisfaction": "98% satisfaction"
+    },
+    "info": {
+      "support": {
+        "title": "Customer Support",
+        "content": "Monday to Friday: 9:00 - 18:00<br>Email: support@yourapp.com<br>Phone: +1 123 456 7890"
+      },
+      "sales": {
+        "title": "Sales Department",
+        "content": "For inquiries about plans and pricing:<br>Email: sales@yourapp.com<br>Phone: +1 123 456 7891"
+      },
+      "partners": {
+        "title": "Alliances and Collaborations",
+        "content": "Interested in becoming a partner:<br>Email: partners@yourapp.com"
+      }
+    },
+    "social": {
+      "title": "Follow Us"
+    },
+    "form": {
+      "name": "Full name",
+      "email": "Email",
+      "phone": "Phone (optional)",
+      "businessType": {
+        "label": "Business type",
+        "placeholder": "Select...",
+        "options": [
+          "Beauty salon",
+          "Spa",
+          "Hair salon",
+          "Barbershop",
+          "Aesthetic center",
+          "Nails and manicure",
+          "Massage center",
+          "Other"
+        ]
+      },
+      "interest": {
+        "label": "What are you interested in?",
+        "placeholder": "Select...",
+        "options": [
+          "Learn more about the platform",
+          "Request a personalized demo",
+          "Information about pricing and plans",
+          "Technical support",
+          "Other"
+        ]
+      },
+      "message": "How can we help you?",
+      "privacy": "I accept the <a href='#'>privacy policy</a> and data processing",
+      "submit": "Send Message",
+      "submitting": "Sending...",
+      "success": "Message sent successfully! We'll contact you soon.",
+      "error": "There was a problem sending the message. Please try again.",
+      "errors": {
+        "name": "Name is required",
+        "email": "Please enter a valid email",
+        "phone": "Please enter a valid phone number",
+        "message": "Please write your message",
+        "privacy": "You must accept the privacy policy"
+      }
+    },
+    "map": {
+      "title": "Our Headquarters",
+      "address": "123 Innovation Street, New York, NY 10001, USA",
+      "viewButton": "View on map"
+    }
+  },
+  "timeline": {
+    "title": "Transform Your Business in 4 Steps",
+    "subtitle": "Quick and straightforward implementation to start seeing results immediately",
+    "steps": [
+      {
+        "title": "Set Up Your Account",
+        "description": "Register and customize your space with your salon's services and specialists in less than 30 minutes. Our assistant guides you through each step.",
+        "note": "No technical knowledge"
+      },
+      {
+        "title": "Customize Your Schedule",
+        "description": "Define hours, block special dates, and establish scheduling rules. The AI will automatically optimize your appointments based on these preferences.",
+        "note": "Tailored to your business"
+      },
+      {
+        "title": "Integrate WhatsApp",
+        "description": "Connect your WhatsApp Business number and configure the virtual assistant. Your clients will be able to schedule appointments via messages without additional apps.",
+        "note": "Instant activation"
+      },
+      {
+        "title": "Start Receiving Bookings",
+        "description": "Invite your clients to book via WhatsApp or share your personalized link. Start seeing results from day one and forget about paper agendas.",
+        "note": "Immediate results"
+      }
+    ],
+    "cta": {
+      "title": "Ready to get started?",
+      "description": "Join hundreds of salons that have already improved their business with our platform",
+      "button": "Start My Free Trial"
+    }
+  },
+  "footer": {
+    "description": "AI-powered scheduling platform that simplifies your beauty salon management and enhances your clients' experience.",
+    "company": "Company",
+    "about": "About us",
+    "careers": "Careers",
+    "blog": "Blog",
+    "resources": "Resources",
+    "help": "Help center",
+    "guides": "Guides",
+    "webinars": "Webinars",
+    "newsletter": {
+      "title": "Subscribe to our Newsletter",
+      "description": "Receive tips, news, and special offers directly in your inbox",
+      "placeholder": "Your email",
+      "loading": "Sending...",
+      "success": "Thank you for subscribing!",
+      "error": "An error occurred. Try again."
+    },
+    "terms": "Terms of use",
+    "privacy": "Privacy policy",
+    "copyright": "© 2023 Privie Schedule. All rights reserved."
+  }
+} 

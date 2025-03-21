@@ -3,17 +3,32 @@
     <div class="container">
       <div class="row justify-content-center mb-5">
         <div class="col-lg-8 text-center">
-          <h2 class="section-title">Hablemos sobre tu Negocio</h2>
-          <p class="section-subtitle">Estamos aquí para resolver tus dudas y ayudarte a potenciar tu salón de belleza</p>
+          <h2 class="section-title">{{ contactTitle }}</h2>
+          <p class="section-subtitle">{{ contactSubtitle }}</p>
         </div>
       </div>
       
       <div class="row g-4">
         <div class="col-lg-5 mb-4 mb-lg-0">
           <div class="contact-info" ref="contactInfo">
-  
+            <div class="info-card welcome-card">
+              <div class="info-card-content">
+                <h3>{{ welcomeTitle }}</h3>
+                <p>{{ welcomeDescription }}</p>
+                <div class="satisfaction-badge">
+                  <div class="rating-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                  </div>
+                  <span>{{ satisfactionRating }}</span>
+                </div>
+              </div>
+            </div>
             
-            <div class="info-card" v-for="(item, index) in contactInfo" :key="index">
+            <div class="info-card" v-for="(item, index) in contactInfoItems" :key="index">
               <div class="info-icon">
                 <i :class="item.icon"></i>
               </div>
@@ -22,6 +37,7 @@
                 <p v-html="item.content"></p>
               </div>
             </div>
+            
           </div>
         </div>
         
@@ -35,13 +51,13 @@
                       type="text" 
                       class="form-control" 
                       id="name" 
-                      placeholder="Tu nombre" 
+                      :placeholder="formPlaceholders.name" 
                       v-model="formData.name"
                       :class="{'is-invalid': errors.name}"
                       required
                     >
-                    <label for="name">Nombre completo</label>
-                    <div class="invalid-feedback" v-if="errors.name">{{ errors.name }}</div>
+                    <label for="name">{{ formLabels.name }}</label>
+                    <div class="invalid-feedback" v-if="errors.name">{{ formErrors.name }}</div>
                   </div>
                 </div>
                 
@@ -51,13 +67,13 @@
                       type="email" 
                       class="form-control" 
                       id="email" 
-                      placeholder="Tu email" 
+                      :placeholder="formPlaceholders.email" 
                       v-model="formData.email"
                       :class="{'is-invalid': errors.email}"
                       required
                     >
-                    <label for="email">Correo electrónico</label>
-                    <div class="invalid-feedback" v-if="errors.email">{{ errors.email }}</div>
+                    <label for="email">{{ formLabels.email }}</label>
+                    <div class="invalid-feedback" v-if="errors.email">{{ formErrors.email }}</div>
                   </div>
                 </div>
                 
@@ -67,12 +83,12 @@
                       type="tel" 
                       class="form-control" 
                       id="phone" 
-                      placeholder="Tu teléfono" 
+                      :placeholder="formPlaceholders.phone" 
                       v-model="formData.phone"
                       :class="{'is-invalid': errors.phone}"
                     >
-                    <label for="phone">Teléfono (opcional)</label>
-                    <div class="invalid-feedback" v-if="errors.phone">{{ errors.phone }}</div>
+                    <label for="phone">{{ formLabels.phone }}</label>
+                    <div class="invalid-feedback" v-if="errors.phone">{{ formErrors.phone }}</div>
                   </div>
                 </div>
                 
@@ -84,12 +100,12 @@
                       v-model="formData.businessType"
                       required
                     >
-                      <option value="" disabled selected>Seleccionar...</option>
+                      <option value="" disabled selected>{{ formPlaceholders.businessType }}</option>
                       <option v-for="(type, index) in businessTypes" :key="index" :value="type">
                         {{ type }}
                       </option>
                     </select>
-                    <label for="businessType">Tipo de negocio</label>
+                    <label for="businessType">{{ formLabels.businessType }}</label>
                   </div>
                 </div>
                 
@@ -101,12 +117,12 @@
                       v-model="formData.interest"
                       required
                     >
-                      <option value="" disabled selected>Seleccionar...</option>
+                      <option value="" disabled selected>{{ formPlaceholders.interest }}</option>
                       <option v-for="(option, index) in interestOptions" :key="index" :value="option">
                         {{ option }}
                       </option>
                     </select>
-                    <label for="interest">¿Qué te interesa?</label>
+                    <label for="interest">{{ formLabels.interest }}</label>
                   </div>
                 </div>
                 
@@ -115,14 +131,14 @@
                     <textarea 
                       class="form-control" 
                       id="message" 
-                      placeholder="Tu mensaje" 
+                      :placeholder="formPlaceholders.message" 
                       v-model="formData.message"
                       :class="{'is-invalid': errors.message}"
                       style="height: 120px"
                       required
                     ></textarea>
-                    <label for="message">¿Cómo podemos ayudarte?</label>
-                    <div class="invalid-feedback" v-if="errors.message">{{ errors.message }}</div>
+                    <label for="message">{{ formLabels.message }}</label>
+                    <div class="invalid-feedback" v-if="errors.message">{{ formErrors.message }}</div>
                   </div>
                 </div>
                 
@@ -136,19 +152,18 @@
                       :class="{'is-invalid': errors.privacy}"
                       required
                     >
-                    <label class="form-check-label" for="privacyPolicy">
-                      Acepto la <a href="#">política de privacidad</a> y el tratamiento de mis datos
+                    <label class="form-check-label" for="privacyPolicy" v-html="formLabels.privacy">
                     </label>
-                    <div class="invalid-feedback" v-if="errors.privacy">{{ errors.privacy }}</div>
+                    <div class="invalid-feedback" v-if="errors.privacy">{{ formErrors.privacy }}</div>
                   </div>
                 </div>
                 
                 <div class="col-12">
                   <div class="form-buttons">
                     <button type="submit" class="btn btn-primary btn-lg" :disabled="isSubmitting">
-                      <span v-if="!isSubmitting">Enviar Mensaje</span>
+                      <span v-if="!isSubmitting">{{ formSubmitButton }} <i class="fa-regular fa-paper-plane"></i></span>
                       <div v-else class="spinner-border spinner-border-sm text-light mx-2" role="status">
-                        <span class="visually-hidden">Enviando...</span>
+                        <span class="visually-hidden">{{ formSubmittingText }}</span>
                       </div>
                     </button>
                   </div>
@@ -164,10 +179,10 @@
         <div class="col-12">
           <div class="map-container">
             <div class="map-overlay">
-              <h4>Nuestra Oficina Central</h4>
-              <p>Calle Innovación 123, 28001 Madrid, España</p>
+              <h4>{{ mapTitle }}</h4>
+              <p>{{ mapAddress }}</p>
               <button class="btn btn-sm btn-light mt-2" @click="loadMap">
-                <i class="fas fa-map-marker-alt me-2"></i>Ver en el mapa
+                <i class="fas fa-map-marker-alt me-2"></i>{{ mapViewButton }}
               </button>
             </div>
             <iframe 
@@ -189,8 +204,14 @@
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n'
+
 export default {
   name: 'ContactSection',
+  setup() {
+    const { locale } = useI18n();
+    return { locale };
+  },
   data() {
     return {
       formData: {
@@ -207,21 +228,21 @@ export default {
       responseMessage: '',
       responseStatus: '',
       mapLoaded: false,
-      contactInfo: [
+      contactInfoItems: [
         {
           icon: 'fas fa-headset',
-          title: 'Soporte al Cliente',
-          content: 'Lunes a Viernes: 9:00 - 18:00<br>Email: soporte@tuapp.com<br>Teléfono: +34 91 123 4567'
+          title: this.$t('contact.info.support.title'),
+          content: this.$t('contact.info.support.content')
         },
         {
           icon: 'fas fa-briefcase',
-          title: 'Departamento Comercial',
-          content: 'Para consultas sobre planes y precios:<br>Email: ventas@tuapp.com<br>Teléfono: +34 91 123 4568'
+          title: this.$t('contact.info.sales.title'),
+          content: this.$t('contact.info.sales.content')
         },
         {
           icon: 'fas fa-handshake',
-          title: 'Alianzas y Colaboraciones',
-          content: 'Interesado en ser partner:<br>Email: partners@tuapp.com'
+          title: this.$t('contact.info.partners.title'),
+          content: this.$t('contact.info.partners.content')
         }
       ],
       socialMedia: [
@@ -231,22 +252,252 @@ export default {
         { icon: 'fab fa-twitter', url: '#' }
       ],
       businessTypes: [
-        'Salón de belleza',
+        'Salão de beleza',
         'Spa',
-        'Peluquería',
-        'Barbería',
+        'Cabelereiro',
+        'Barbearia',
         'Centro de estética',
-        'Uñas y manicura',
-        'Centro de masajes',
-        'Otro'
+        'Unhas e manicure',
+        'Centro de massagens',
+        'Outro'
       ],
       interestOptions: [
-        'Conocer más sobre la plataforma',
-        'Solicitar una demostración personalizada',
-        'Información sobre precios y planes',
-        'Soporte técnico',
-        'Otro'
+        'Saber mais sobre a plataforma',
+        'Solicitar uma demonstração personalizada',
+        'Informações sobre preços e planos',
+        'Suporte técnico',
+        'Outro'
       ]
+    }
+  },
+  computed: {
+    contactTitle() {
+      const titles = {
+        'pt': 'Vamos Falar Sobre o Seu Negócio',
+        'es': 'Hablemos Sobre Tu Negocio',
+        'en': 'Let\'s Talk About Your Business'
+      };
+      return titles[this.locale] || titles.pt;
+    },
+    contactSubtitle() {
+      const subtitles = {
+        'pt': 'Estamos aqui para responder às suas dúvidas e ajudar a potencializar seu salão de beleza',
+        'es': 'Estamos aquí para responder tus dudas y ayudarte a potenciar tu salón de belleza',
+        'en': 'We\'re here to answer your questions and help boost your beauty salon'
+      };
+      return subtitles[this.locale] || subtitles.pt;
+    },
+    welcomeTitle() {
+      const titles = {
+        'pt': 'Bem-vindo à sua Transformação Digital!',
+        'es': '¡Bienvenido a tu Transformación Digital!',
+        'en': 'Welcome to Your Digital Transformation!'
+      };
+      return titles[this.locale] || titles.pt;
+    },
+    welcomeDescription() {
+      const descriptions = {
+        'pt': 'Preencha o formulário e um especialista entrará em contato para mostrar como nossa plataforma pode se adaptar às suas necessidades específicas.',
+        'es': 'Completa el formulario y un especialista se pondrá en contacto contigo para mostrarte cómo nuestra plataforma puede adaptarse a tus necesidades específicas.',
+        'en': 'Fill out the form and a specialist will contact you to show how our platform can adapt to your specific needs.'
+      };
+      return descriptions[this.locale] || descriptions.pt;
+    },
+    satisfactionRating() {
+      const ratings = {
+        'pt': '98% de satisfação',
+        'es': '98% de satisfacción',
+        'en': '98% satisfaction'
+      };
+      return ratings[this.locale] || ratings.pt;
+    },
+    formLabels() {
+      const labels = {
+        'pt': {
+          name: 'Nome completo',
+          email: 'E-mail',
+          phone: 'Telefone (opcional)',
+          businessType: 'Tipo de negócio',
+          interest: 'O que lhe interessa?',
+          message: 'Como podemos ajudar?',
+          privacy: 'Aceito a <a href="#">política de privacidade</a> e o tratamento dos meus dados'
+        },
+        'es': {
+          name: 'Nombre completo',
+          email: 'Correo electrónico',
+          phone: 'Teléfono (opcional)',
+          businessType: 'Tipo de negocio',
+          interest: '¿Qué te interesa?',
+          message: '¿Cómo podemos ayudarte?',
+          privacy: 'Acepto la <a href="#">política de privacidad</a> y el tratamiento de mis datos'
+        },
+        'en': {
+          name: 'Full name',
+          email: 'Email',
+          phone: 'Phone (optional)',
+          businessType: 'Business type',
+          interest: 'What are you interested in?',
+          message: 'How can we help you?',
+          privacy: 'I accept the <a href="#">privacy policy</a> and data processing'
+        }
+      };
+      return labels[this.locale] || labels.pt;
+    },
+    formPlaceholders() {
+      const placeholders = {
+        'pt': {
+          name: 'Seu nome',
+          email: 'seu.email@exemplo.com',
+          phone: '(00) 00000-0000',
+          businessType: 'Selecionar...',
+          interest: 'Selecionar...',
+          message: 'Digite sua mensagem aqui...'
+        },
+        'es': {
+          name: 'Tu nombre',
+          email: 'tu.email@ejemplo.com',
+          phone: '(00) 00000-0000',
+          businessType: 'Seleccionar...',
+          interest: 'Seleccionar...',
+          message: 'Escribe tu mensaje aquí...'
+        },
+        'en': {
+          name: 'Your name',
+          email: 'your.email@example.com',
+          phone: '(000) 000-0000',
+          businessType: 'Select...',
+          interest: 'Select...',
+          message: 'Type your message here...'
+        }
+      };
+      return placeholders[this.locale] || placeholders.pt;
+    },
+    formErrors() {
+      const errors = {
+        'pt': {
+          name: 'O nome é obrigatório',
+          email: 'Por favor, insira um e-mail válido',
+          phone: 'Por favor, insira um número de telefone válido',
+          message: 'Por favor, escreva sua mensagem',
+          privacy: 'Você deve aceitar a política de privacidade'
+        },
+        'es': {
+          name: 'El nombre es obligatorio',
+          email: 'Por favor, introduce un correo electrónico válido',
+          phone: 'Por favor, introduce un número de teléfono válido',
+          message: 'Por favor, escribe tu mensaje',
+          privacy: 'Debes aceptar la política de privacidad'
+        },
+        'en': {
+          name: 'Name is required',
+          email: 'Please enter a valid email',
+          phone: 'Please enter a valid phone number',
+          message: 'Please write your message',
+          privacy: 'You must accept the privacy policy'
+        }
+      };
+      return errors[this.locale] || errors.pt;
+    },
+    formSubmitButton() {
+      const buttons = {
+        'pt': 'Enviar Mensagem',
+        'es': 'Enviar Mensaje',
+        'en': 'Send Message'
+      };
+      return buttons[this.locale] || buttons.pt;
+    },
+    formSubmittingText() {
+      const texts = {
+        'pt': 'Enviando...',
+        'es': 'Enviando...',
+        'en': 'Sending...'
+      };
+      return texts[this.locale] || texts.pt;
+    },
+    mapTitle() {
+      const titles = {
+        'pt': 'Nosso Escritório Central',
+        'es': 'Nuestra Oficina Central',
+        'en': 'Our Headquarters'
+      };
+      return titles[this.locale] || titles.pt;
+    },
+    mapAddress() {
+      const addresses = {
+        'pt': 'Rua Inovação 123, 01234-000 São Paulo, Brasil',
+        'es': 'Calle Innovación 123, 28001 Madrid, España',
+        'en': '123 Innovation Street, New York, NY 10001, USA'
+      };
+      return addresses[this.locale] || addresses.pt;
+    },
+    mapViewButton() {
+      const buttons = {
+        'pt': 'Ver no mapa',
+        'es': 'Ver en el mapa',
+        'en': 'View on map'
+      };
+      return buttons[this.locale] || buttons.pt;
+    },
+    businessTypes() {
+      const types = {
+        'pt': [
+          'Salão de beleza',
+          'Spa',
+          'Cabelereiro',
+          'Barbearia',
+          'Centro de estética',
+          'Unhas e manicure',
+          'Centro de massagens',
+          'Outro'
+        ],
+        'es': [
+          'Salón de belleza',
+          'Spa',
+          'Peluquería',
+          'Barbería',
+          'Centro de estética',
+          'Uñas y manicura',
+          'Centro de masajes',
+          'Otro'
+        ],
+        'en': [
+          'Beauty salon',
+          'Spa',
+          'Hair salon',
+          'Barbershop',
+          'Aesthetic center',
+          'Nails and manicure',
+          'Massage center',
+          'Other'
+        ]
+      };
+      return types[this.locale] || types.pt;
+    },
+    interestOptions() {
+      const options = {
+        'pt': [
+          'Saber mais sobre a plataforma',
+          'Solicitar uma demonstração personalizada',
+          'Informações sobre preços e planos',
+          'Suporte técnico',
+          'Outro'
+        ],
+        'es': [
+          'Conocer más sobre la plataforma',
+          'Solicitar una demostración personalizada',
+          'Información sobre precios y planes',
+          'Soporte técnico',
+          'Otro'
+        ],
+        'en': [
+          'Learn more about the platform',
+          'Request a personalized demonstration',
+          'Information about pricing and plans',
+          'Technical support',
+          'Other'
+        ]
+      };
+      return options[this.locale] || options.pt;
     }
   },
   mounted() {
@@ -277,30 +528,30 @@ export default {
       // Validación de correo electrónico
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (this.formData.email && !emailRegex.test(this.formData.email)) {
-        this.errors.email = 'Por favor, introduce un correo electrónico válido';
+        this.errors.email = this.formErrors.email;
         isValid = false;
       }
       
       // Validación de teléfono (opcional)
       const phoneRegex = /^(\+\d{1,3})?\s?\d{9,}$/;
       if (this.formData.phone && !phoneRegex.test(this.formData.phone)) {
-        this.errors.phone = 'Por favor, introduce un número de teléfono válido';
+        this.errors.phone = this.formErrors.phone;
         isValid = false;
       }
       
       // Validación de campos requeridos
       if (!this.formData.name.trim()) {
-        this.errors.name = 'El nombre es obligatorio';
+        this.errors.name = this.formErrors.name;
         isValid = false;
       }
       
       if (!this.formData.message.trim()) {
-        this.errors.message = 'Por favor, escribe tu mensaje';
+        this.errors.message = this.formErrors.message;
         isValid = false;
       }
       
       if (!this.formData.privacyAccepted) {
-        this.errors.privacy = 'Debes aceptar la política de privacidad';
+        this.errors.privacy = this.formErrors.privacy;
         isValid = false;
       }
       
@@ -318,7 +569,13 @@ export default {
         await new Promise(resolve => setTimeout(resolve, 1500));
         
         // Simulación de respuesta exitosa
-        this.responseMessage = '¡Mensaje enviado con éxito! Nos pondremos en contacto contigo pronto.';
+        const successMessages = {
+          'pt': 'Mensagem enviada com sucesso! Entraremos em contato em breve.',
+          'es': '¡Mensaje enviado con éxito! Nos pondremos en contacto contigo pronto.',
+          'en': 'Message sent successfully! We\'ll contact you soon.'
+        };
+        
+        this.responseMessage = successMessages[this.locale] || successMessages.pt;
         this.responseStatus = 'text-success';
         
         // Resetear formulario después de envío exitoso
@@ -334,7 +591,13 @@ export default {
         
       } catch (error) {
         // Manejo de error
-        this.responseMessage = 'Hubo un problema al enviar el mensaje. Por favor, inténtalo de nuevo.';
+        const errorMessages = {
+          'pt': 'Ocorreu um problema ao enviar a mensagem. Por favor, tente novamente.',
+          'es': 'Hubo un problema al enviar el mensaje. Por favor, inténtalo de nuevo.',
+          'en': 'There was a problem sending the message. Please try again.'
+        };
+        
+        this.responseMessage = errorMessages[this.locale] || errorMessages.pt;
         this.responseStatus = 'text-danger';
         console.error('Error sending form:', error);
       } finally {
@@ -764,5 +1027,14 @@ textarea.form-control {
   .map-overlay p {
     font-size: 1rem;
   }
+}
+
+.form-check .form-check-input {
+  float: initial!important;
+  margin-right: 10px;
+}
+
+.form-select {
+  padding-top: 25px!important;
 }
 </style>

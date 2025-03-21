@@ -3,13 +3,13 @@
     <div class="container">
       <div class="row justify-content-center mb-4">
         <div class="col-lg-8 text-center">
-          <h2 class="stats-title">Cifras que Hablan por Sí Mismas</h2>
-          <p class="stats-subtitle">Resultados reales de negocios como el tuyo</p>
+          <h2 class="stats-title">{{ statsTitle }}</h2>
+          <p class="stats-subtitle">{{ statsSubtitle }}</p>
         </div>
       </div>
       
       <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4 stats-container">
-        <div class="col" v-for="(stat, index) in stats" :key="index">
+        <div class="col" v-for="(stat, index) in translatedStats" :key="index">
           <div class="stats-card">
             <div class="stats-icon">
               <i :class="stat.icon"></i>
@@ -28,8 +28,14 @@
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n'
+
 export default {
   name: 'StatsSection',
+  setup() {
+    const { locale } = useI18n();
+    return { locale };
+  },
   data() {
     return {
       observer: null,
@@ -66,6 +72,91 @@ export default {
       ]
     }
   },
+  computed: {
+    statsTitle() {
+      const titles = {
+        'pt': 'Números que Falam por Si Mesmos',
+        'es': 'Cifras que Hablan por Sí Mismas',
+        'en': 'Numbers that Speak for Themselves'
+      };
+      return titles[this.locale] || titles.pt;
+    },
+    statsSubtitle() {
+      const subtitles = {
+        'pt': 'Resultados reais de negócios como o seu',
+        'es': 'Resultados reales de negocios como el tuyo',
+        'en': 'Real results from businesses like yours'
+      };
+      return subtitles[this.locale] || subtitles.pt;
+    },
+    translatedStats() {
+      const translations = {
+        'pt': [
+          {
+            icon: 'fas fa-calendar-alt',
+            value: 35000,
+            suffix: '+',
+            label: 'Agendamentos Mensais',
+            description: 'Agendados automaticamente através da nossa plataforma'
+          },
+          {
+            icon: 'fas fa-business-time',
+            value: 68,
+            suffix: '%',
+            label: 'Menos Cancelamentos',
+            description: 'Graças a lembretes automáticos e confirmações'
+          },
+          {
+            icon: 'fas fa-clock',
+            value: 12,
+            suffix: 'h',
+            label: 'Tempo Economizado',
+            description: 'Semanalmente em tarefas administrativas por negócio'
+          },
+          {
+            icon: 'fas fa-chart-line',
+            value: 42,
+            suffix: '%',
+            label: 'Aumento de Receita',
+            description: 'Média em negócios com 6 meses de uso'
+          }
+        ],
+        'es': this.stats,
+        'en': [
+          {
+            icon: 'fas fa-calendar-alt',
+            value: 35000,
+            suffix: '+',
+            label: 'Monthly Appointments',
+            description: 'Automatically scheduled through our platform'
+          },
+          {
+            icon: 'fas fa-business-time',
+            value: 68,
+            suffix: '%',
+            label: 'Fewer Cancellations',
+            description: 'Thanks to automatic reminders and confirmations'
+          },
+          {
+            icon: 'fas fa-clock',
+            value: 12,
+            suffix: 'h',
+            label: 'Time Saved',
+            description: 'Weekly on administrative tasks per business'
+          },
+          {
+            icon: 'fas fa-chart-line',
+            value: 42,
+            suffix: '%',
+            label: 'Revenue Increase',
+            description: 'Average in businesses with 6 months of use'
+          }
+        ]
+      };
+      
+      return translations[this.locale] || translations.pt;
+    }
+  },
   mounted() {
     // Configurar Intersection Observer para detectar cuando la sección está visible
     this.observer = new IntersectionObserver((entries) => {
@@ -78,6 +169,20 @@ export default {
     }, { threshold: 0.2 }); // Activar cuando al menos el 20% de la sección sea visible
     
     this.observer.observe(this.$refs.statsSection);
+  },
+  updated() {
+    // Si cambia el idioma pero ya se ha animado, necesitamos actualizar los contadores
+    if (this.animated) {
+      // Pequeño retraso para asegurar que el DOM se ha actualizado
+      setTimeout(() => {
+        // Actualizar los contadores directamente a sus valores finales
+        const counters = document.querySelectorAll('.counter');
+        counters.forEach(counter => {
+          const target = parseInt(counter.getAttribute('data-target'));
+          counter.innerText = target.toLocaleString();
+        });
+      }, 0);
+    }
   },
   beforeUnmount() {
     // Limpiar el observer cuando el componente se desmonte

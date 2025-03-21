@@ -3,8 +3,8 @@
     <div class="container">
       <div class="row text-center mb-5">
         <div class="col-lg-8 mx-auto">
-          <h2 class="fw-bold mb-3">Funcionalidades Destacadas</h2>
-          <p class="lead text-muted">Todo lo que necesitas para gestionar tu negocio de estética</p>
+          <h2 class="fw-bold mb-3">{{ featuresTitle }}</h2>
+          <p class="lead text-muted">{{ featuresSubtitle }}</p>
         </div>
       </div>
       
@@ -15,12 +15,12 @@
                class="img-fluid rounded-3 shadow">
         </div>
         <div class="col-md-6 order-md-1 mt-4 mt-md-0">
-          <h3>Agendamiento Inteligente</h3>
-          <p>Nuestro sistema aprende los patrones de tu negocio para optimizar automáticamente tu calendario, asegurando la distribución ideal de citas y maximizando los ingresos.</p>
+          <h3>{{ intelligentSchedulingTitle }}</h3>
+          <p>{{ intelligentSchedulingText }}</p>
           <ul class="list-unstyled">
-            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Evita huecos improductivos</li>
-            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Prioriza servicios más rentables</li>
-            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Reducción de tiempo muerto entre citas</li>
+            <li class="mb-2" v-for="(item, index) in intelligentSchedulingBenefits" :key="index">
+              <i class="fas fa-check-circle text-success me-2"></i>{{ item }}
+            </li>
           </ul>
         </div>
       </div>
@@ -32,12 +32,12 @@
                class="img-fluid rounded-3 shadow">
         </div>
         <div class="col-md-6 mt-4 mt-md-0">
-          <h3>Asistente de WhatsApp con IA</h3>
-          <p>Automatiza la comunicación con tus clientes a través de un asistente inteligente que entiende lenguaje natural y gestiona todo el proceso de reservas.</p>
+          <h3>{{ whatsappAssistantTitle }}</h3>
+          <p>{{ whatsappAssistantText }}</p>
           <ul class="list-unstyled">
-            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Respuestas instantáneas 24/7</li>
-            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Permite agendar, modificar o cancelar citas</li>
-            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Envío automático de recordatorios</li>
+            <li class="mb-2" v-for="(item, index) in whatsappAssistantBenefits" :key="index">
+              <i class="fas fa-check-circle text-success me-2"></i>{{ item }}
+            </li>
           </ul>
         </div>
       </div>
@@ -46,8 +46,104 @@
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n'
+
 export default {
-  name: 'FeaturesSection'
+  name: 'FeaturesSection',
+  setup() {
+    const { locale } = useI18n();
+    return { locale };
+  },
+  computed: {
+    featuresTitle() {
+      const titles = {
+        'pt': 'Funcionalidades Destacadas',
+        'es': 'Funcionalidades Destacadas',
+        'en': 'Featured Functionalities'
+      };
+      return titles[this.locale] || titles.pt;
+    },
+    featuresSubtitle() {
+      const subtitles = {
+        'pt': 'Tudo o que você precisa para gerenciar seu negócio de estética',
+        'es': 'Todo lo que necesitas para gestionar tu negocio de estética',
+        'en': 'Everything you need to manage your beauty business'
+      };
+      return subtitles[this.locale] || subtitles.pt;
+    },
+    intelligentSchedulingTitle() {
+      const titles = {
+        'pt': 'Agendamento Inteligente',
+        'es': 'Agendamiento Inteligente',
+        'en': 'Intelligent Scheduling'
+      };
+      return titles[this.locale] || titles.pt;
+    },
+    intelligentSchedulingText() {
+      const texts = {
+        'pt': 'Nosso sistema aprende os padrões do seu negócio para otimizar automaticamente sua agenda, garantindo a distribuição ideal de compromissos e maximizando a receita.',
+        'es': 'Nuestro sistema aprende los patrones de tu negocio para optimizar automáticamente tu calendario, asegurando la distribución ideal de citas y maximizando los ingresos.',
+        'en': 'Our system learns your business patterns to automatically optimize your calendar, ensuring ideal appointment distribution and maximizing revenue.'
+      };
+      return texts[this.locale] || texts.pt;
+    },
+    intelligentSchedulingBenefits() {
+      const benefits = {
+        'pt': [
+          'Evita lacunas improdutivas',
+          'Prioriza serviços mais rentáveis',
+          'Redução do tempo ocioso entre compromissos'
+        ],
+        'es': [
+          'Evita huecos improductivos',
+          'Prioriza servicios más rentables',
+          'Reducción de tiempo muerto entre citas'
+        ],
+        'en': [
+          'Avoids unproductive gaps',
+          'Prioritizes more profitable services',
+          'Reduces downtime between appointments'
+        ]
+      };
+      return benefits[this.locale] || benefits.pt;
+    },
+    whatsappAssistantTitle() {
+      const titles = {
+        'pt': 'Assistente de WhatsApp com IA',
+        'es': 'Asistente de WhatsApp con IA',
+        'en': 'AI-Powered WhatsApp Assistant'
+      };
+      return titles[this.locale] || titles.pt;
+    },
+    whatsappAssistantText() {
+      const texts = {
+        'pt': 'Automatize a comunicação com seus clientes através de um assistente inteligente que entende linguagem natural e gerencia todo o processo de reservas.',
+        'es': 'Automatiza la comunicación con tus clientes a través de un asistente inteligente que entiende lenguaje natural y gestiona todo el proceso de reservas.',
+        'en': 'Automate communication with your clients through an intelligent assistant that understands natural language and manages the entire booking process.'
+      };
+      return texts[this.locale] || texts.pt;
+    },
+    whatsappAssistantBenefits() {
+      const benefits = {
+        'pt': [
+          'Respostas instantâneas 24/7',
+          'Permite agendar, modificar ou cancelar compromissos',
+          'Envio automático de lembretes'
+        ],
+        'es': [
+          'Respuestas instantáneas 24/7',
+          'Permite agendar, modificar o cancelar citas',
+          'Envío automático de recordatorios'
+        ],
+        'en': [
+          'Instant responses 24/7',
+          'Allows scheduling, modifying, or canceling appointments',
+          'Automatic reminder sending'
+        ]
+      };
+      return benefits[this.locale] || benefits.pt;
+    }
+  }
 };
 </script>
 

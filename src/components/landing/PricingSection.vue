@@ -3,22 +3,25 @@
     <div class="container">
       <div class="row justify-content-center mb-5">
         <div class="col-lg-8 text-center">
-          <h2 class="section-title">Planes Diseñados para tu Negocio</h2>
-          <p class="section-subtitle">Elige el plan que mejor se adapte a las necesidades de tu salón</p>
+          <h2 class="section-title">{{ pricingTitle }}</h2>
+          <p class="section-subtitle">{{ pricingSubtitle }}</p>
           
           <div class="pricing-toggle mt-4">
-            <span :class="{ 'active': !isAnnual }">Mensual</span>
+            <span :class="{ 'active': !isYearly }">{{ pricingLabels.monthly }}</span>
             <label class="switch mx-3">
-              <input type="checkbox" v-model="isAnnual">
+              <input type="checkbox" v-model="isYearly">
               <span class="slider round"></span>
             </label>
-            <span :class="{ 'active': isAnnual }">Anual <span class="save-badge">Ahorra 20%</span></span>
+            <span :class="{ 'active': isYearly }">
+              {{ pricingLabels.yearly }}
+              <span class="discount-badge">{{ pricingLabels.discount }}</span>
+            </span>
           </div>
         </div>
       </div>
 
       <div class="row pricing-cards g-4 justify-content-center">
-        <div class="col-md-6 col-lg-4" v-for="(plan, index) in plans" :key="index">
+        <div class="col-md-6 col-lg-4" v-for="(plan, index) in translatedPlans" :key="index">
           <div class="pricing-card" 
                :class="{ 
                  'popular': plan.popular, 
@@ -26,23 +29,23 @@
                  'highlight-pulse': plan.popular && highlightPopular
                }" 
                ref="pricingCards">
-            <div class="popular-badge" v-if="plan.popular">Más Popular</div>
+            <div class="popular-badge" v-if="plan.popular">{{ pricingLabels.popular }}</div>
             <div class="pricing-card-header">
               <h3 class="pricing-name">{{ plan.name }}</h3>
               <p class="pricing-description">{{ plan.description }}</p>
               <div class="pricing-price">
-                <span class="currency">€</span>
-                <span class="amount">{{ isAnnual ? plan.annualPrice : plan.monthlyPrice }}</span>
-                <span class="period">/mes</span>
+                <span class="currency">{{ plan.currency }}</span>
+                <span class="amount">{{ isYearly ? plan.yearlyPrice : plan.monthlyPrice }}</span>
+                <span class="period">/ {{ isYearly ? pricingLabels.year : pricingLabels.month }}</span>
               </div>
-              <p class="pricing-billing" v-if="isAnnual">Facturado anualmente</p>
+              <p class="pricing-billing" v-if="isYearly">Facturado anualmente</p>
             </div>
             
             <div class="pricing-features">
               <ul>
                 <li v-for="(feature, fIndex) in plan.features" :key="fIndex">
                   <i :class="feature.included ? 'fas fa-check included' : 'fas fa-times excluded'"></i>
-                  {{ feature.text }}
+                  {{ feature }}
                   <span class="feature-tooltip" v-if="feature.tooltip">
                     <i class="fas fa-info-circle"></i>
                     <span class="tooltip-text">{{ feature.tooltip }}</span>
@@ -52,9 +55,7 @@
             </div>
             
             <div class="pricing-action">
-              <button class="btn" :class="plan.popular ? 'btn-primary' : 'btn-outline'">
-                {{ plan.buttonText }}
-              </button>
+              <button class="btn" :class="plan.buttonClass">{{ plan.buttonText }}</button>
             </div>
             
             <div class="pricing-footer" v-if="plan.footerText">
@@ -68,23 +69,24 @@
         <div class="col-12 text-center">
           <div class="pricing-guarantee">
             <i class="fas fa-shield-alt guarantee-icon"></i>
-            <h4>Garantía de Satisfacción 100%</h4>
-            <p>Si no estás completamente satisfecho, te devolvemos tu dinero en los primeros 30 días. Sin preguntas.</p>
+            <h4>{{ guaranteeTitle }}</h4>
+            <p>{{ guaranteeText }}</p>
           </div>
           
           <div class="pricing-faq mt-5">
-            <h3 class="faq-title">Preguntas Frecuentes</h3>
-            <div class="accordion" id="pricingFaq">
-              <div class="accordion-item" v-for="(faq, faqIndex) in faqs" :key="faqIndex">
-                <h2 class="accordion-header" :id="`faqHeading${faqIndex}`">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" :data-bs-target="`#faqCollapse${faqIndex}`" aria-expanded="false" :aria-controls="`faqCollapse${faqIndex}`">
-                    {{ faq.question }}
+            <h3 class="faq-title">{{ faqTitle }}</h3>
+            <div class="accordion" id="pricingFAQ">
+              <div class="accordion-item" v-for="(item, index) in translatedFaq" :key="index">
+                <h2 class="accordion-header" :id="'heading' + index">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                          :data-bs-target="'#collapse' + index" aria-expanded="false" 
+                          :aria-controls="'collapse' + index">
+                    {{ item.question }}
                   </button>
                 </h2>
-                <div :id="`faqCollapse${faqIndex}`" class="accordion-collapse collapse" :aria-labelledby="`faqHeading${faqIndex}`" data-bs-parent="#pricingFaq">
-                  <div class="accordion-body">
-                    {{ faq.answer }}
-                  </div>
+                <div :id="'collapse' + index" class="accordion-collapse collapse" 
+                     :aria-labelledby="'heading' + index" data-bs-parent="#pricingFAQ">
+                  <div class="accordion-body" v-html="item.answer"></div>
                 </div>
               </div>
             </div>
@@ -96,11 +98,17 @@
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n'
+
 export default {
   name: 'PricingSection',
+  setup() {
+    const { locale } = useI18n();
+    return { locale };
+  },
   data() {
     return {
-      isAnnual: false,
+      isYearly: false,
       planInView: [],
       pricingObservers: [],
       highlightPopular: false,
@@ -188,6 +196,306 @@ export default {
           answer: 'Conectamos tu número de WhatsApp Business a nuestra plataforma. Tus clientes pueden agendar, confirmar o cancelar citas mediante mensajes normales que son procesados por nuestro sistema de IA.'
         }
       ]
+    }
+  },
+  computed: {
+    pricingTitle() {
+      const titles = {
+        'pt': 'Planos Simples e Transparentes',
+        'es': 'Planes Simples y Transparentes',
+        'en': 'Simple and Transparent Plans'
+      };
+      return titles[this.locale] || titles.pt;
+    },
+    pricingSubtitle() {
+      const subtitles = {
+        'pt': 'Escolha o plano ideal para o seu negócio sem surpresas ou taxas ocultas',
+        'es': 'Elige el plan ideal para tu negocio sin sorpresas ni tarifas ocultas',
+        'en': 'Choose the ideal plan for your business with no surprises or hidden fees'
+      };
+      return subtitles[this.locale] || subtitles.pt;
+    },
+    pricingLabels() {
+      const labels = {
+        'pt': {
+          monthly: 'Mensal',
+          yearly: 'Anual',
+          discount: 'Economize 20%',
+          popular: 'Mais Popular',
+          month: 'mês',
+          year: 'ano'
+        },
+        'es': {
+          monthly: 'Mensual',
+          yearly: 'Anual',
+          discount: 'Ahorra 20%',
+          popular: 'Más Popular',
+          month: 'mes',
+          year: 'año'
+        },
+        'en': {
+          monthly: 'Monthly',
+          yearly: 'Yearly',
+          discount: 'Save 20%',
+          popular: 'Most Popular',
+          month: 'month',
+          year: 'year'
+        }
+      };
+      return labels[this.locale] || labels.pt;
+    },
+    translatedPlans() {
+      const plans = {
+        'pt': [
+          {
+            name: 'Iniciante',
+            description: 'Ideal para salões pequenos e profissionais autônomos',
+            currency: '€',
+            monthlyPrice: '99',
+            yearlyPrice: '79',
+            features: [
+              'Até 2 profissionais',
+              'Número ilimitado de clientes',
+              'Agendamento por WhatsApp',
+              'Recordatórios automáticos',
+              'Painel básico de relatórios'
+            ],
+            buttonText: 'Começar grátis',
+            buttonClass: 'btn-outline-primary',
+            popular: false
+          },
+          {
+            name: 'Profissional',
+            description: 'Perfeito para salões em crescimento com várias estações',
+            currency: '€',
+            monthlyPrice: '189',
+            yearlyPrice: '151',
+            features: [
+              'Até 5 profissionais',
+              'Tudo do plano Iniciante',
+              'Gestão de estoque',
+              'Integração com redes sociais',
+              'Assistente IA avançado',
+              'Suporte prioritário'
+            ],
+            buttonText: 'Experimentar agora',
+            buttonClass: 'btn-primary',
+            popular: true
+          },
+          {
+            name: 'Empresarial',
+            description: 'Solução completa para redes de salões',
+            currency: '€',
+            monthlyPrice: '299',
+            yearlyPrice: '239',
+            features: [
+              'Equipe ilimitada',
+              'Tudo do plano Profissional',
+              'Múltiplas localizações',
+              'Personalização completa',
+              'API para desenvolvedores',
+              'Gerente de conta dedicado'
+            ],
+            buttonText: 'Fale conosco',
+            buttonClass: 'btn-outline-primary',
+            popular: false
+          }
+        ],
+        'es': [
+          {
+            name: 'Iniciante',
+            description: 'Ideal para salones pequeños y profesionales autónomos',
+            currency: '€',
+            monthlyPrice: '99',
+            yearlyPrice: '79',
+            features: [
+              'Hasta 2 profesionales',
+              'Número ilimitado de clientes',
+              'Agendamiento por WhatsApp',
+              'Recordatorios automáticos',
+              'Panel básico de informes'
+            ],
+            buttonText: 'Empezar gratis',
+            buttonClass: 'btn-outline-primary',
+            popular: false
+          },
+          {
+            name: 'Profesional',
+            description: 'Perfecto para salones en crecimiento con varias estaciones',
+            currency: '€',
+            monthlyPrice: '189',
+            yearlyPrice: '151',
+            features: [
+              'Hasta 5 profesionales',
+              'Todo del plan Iniciante',
+              'Gestión de inventario',
+              'Integración con redes sociales',
+              'Asistente IA avanzado',
+              'Soporte prioritario'
+            ],
+            buttonText: 'Probar ahora',
+            buttonClass: 'btn-primary',
+            popular: true
+          },
+          {
+            name: 'Empresarial',
+            description: 'Solución completa para redes de salones',
+            currency: '€',
+            monthlyPrice: '299',
+            yearlyPrice: '239',
+            features: [
+              'Equipo ilimitado',
+              'Todo del plan Profesional',
+              'Múltiples ubicaciones',
+              'Personalización completa',
+              'API para desarrolladores',
+              'Gerente de cuenta dedicado'
+            ],
+            buttonText: 'Contáctanos',
+            buttonClass: 'btn-outline-primary',
+            popular: false
+          }
+        ],
+        'en': [
+          {
+            name: 'Starter',
+            description: 'Ideal for small salons and independent professionals',
+            currency: '€',
+            monthlyPrice: '99',
+            yearlyPrice: '79',
+            features: [
+              'Up to 2 professionals',
+              'Unlimited clients',
+              'WhatsApp scheduling',
+              'Automatic reminders',
+              'Basic reporting dashboard'
+            ],
+            buttonText: 'Start for free',
+            buttonClass: 'btn-outline-primary',
+            popular: false
+          },
+          {
+            name: 'Professional',
+            description: 'Perfect for growing salons with multiple stations',
+            currency: '€',
+            monthlyPrice: '189',
+            yearlyPrice: '151',
+            features: [
+              'Up to 5 professionals',
+              'Everything in Starter',
+              'Inventory management',
+              'Social media integration',
+              'Advanced AI assistant',
+              'Priority support'
+            ],
+            buttonText: 'Try now',
+            buttonClass: 'btn-primary',
+            popular: true
+          },
+          {
+            name: 'Enterprise',
+            description: 'Complete solution for salon chains',
+            currency: '€',
+            monthlyPrice: '299',
+            yearlyPrice: '239',
+            features: [
+              'Unlimited team',
+              'Everything in Professional',
+              'Multiple locations',
+              'Full customization',
+              'Developer API',
+              'Dedicated account manager'
+            ],
+            buttonText: 'Contact us',
+            buttonClass: 'btn-outline-primary',
+            popular: false
+          }
+        ]
+      };
+      return plans[this.locale] || plans.pt;
+    },
+    faqTitle() {
+      const titles = {
+        'pt': 'Perguntas Frequentes',
+        'es': 'Preguntas Frecuentes',
+        'en': 'Frequently Asked Questions'
+      };
+      return titles[this.locale] || titles.pt;
+    },
+    translatedFaq() {
+      const faqs = {
+        'pt': [
+          {
+            question: 'O que está incluído no teste gratuito?',
+            answer: 'O teste gratuito de 14 dias inclui todas as funcionalidades do plano Profissional, permitindo que você experimente a plataforma por completo antes de decidir qual plano é o ideal para o seu negócio.'
+          },
+          {
+            question: 'Preciso fornecer dados de cartão de crédito para o teste?',
+            answer: 'Não, não solicitamos dados de cartão de crédito para iniciar seu período de teste gratuito. Você só precisará fornecer informações de pagamento quando decidir assinar um de nossos planos após o período de teste.'
+          },
+          {
+            question: 'Posso mudar de plano depois?',
+            answer: 'Sim, você pode fazer upgrade ou downgrade de seu plano a qualquer momento. Se você fizer upgrade, o valor será ajustado proporcionalmente ao tempo restante do seu ciclo de faturamento. Em caso de downgrade, o novo valor será aplicado no próximo ciclo.'
+          },
+          {
+            question: 'Como funciona a integração com WhatsApp?',
+            answer: 'Nossa plataforma se integra ao WhatsApp Business API, permitindo que seus clientes agendem, confirmem e cancelem compromissos diretamente pelo WhatsApp. O processo de configuração é simples e orientado, e oferecemos suporte completo durante a integração.'
+          }
+        ],
+        'es': [
+          {
+            question: '¿Qué incluye la prueba gratuita?',
+            answer: 'La prueba gratuita de 14 días incluye todas las funcionalidades del plan Profesional, permitiéndote experimentar la plataforma por completo antes de decidir qué plan es el ideal para tu negocio.'
+          },
+          {
+            question: '¿Necesito proporcionar datos de tarjeta de crédito para la prueba?',
+            answer: 'No, no solicitamos datos de tarjeta de crédito para iniciar tu período de prueba gratuita. Solo necesitarás proporcionar información de pago cuando decidas suscribirte a uno de nuestros planes después del período de prueba.'
+          },
+          {
+            question: '¿Puedo cambiar de plan después?',
+            answer: 'Sí, puedes hacer upgrade o downgrade de tu plan en cualquier momento. Si haces upgrade, el valor será ajustado proporcionalmente al tiempo restante de tu ciclo de facturación. En caso de downgrade, el nuevo valor se aplicará en el próximo ciclo.'
+          },
+          {
+            question: '¿Cómo funciona la integración con WhatsApp?',
+            answer: 'Nuestra plataforma se integra con WhatsApp Business API, permitiendo que tus clientes agenden, confirmen y cancelen citas directamente por WhatsApp. El proceso de configuración es simple y guiado, y ofrecemos soporte completo durante la integración.'
+          }
+        ],
+        'en': [
+          {
+            question: 'What is included in the free trial?',
+            answer: 'The 14-day free trial includes all features of the Professional plan, allowing you to fully experience the platform before deciding which plan is ideal for your business.'
+          },
+          {
+            question: 'Do I need to provide credit card data for the trial?',
+            answer: 'No, we don\'t request credit card data to start your free trial period. You will only need to provide payment information when you decide to subscribe to one of our plans after the trial period.'
+          },
+          {
+            question: 'Can I change plans later?',
+            answer: 'Yes, you can upgrade or downgrade your plan at any time. If you upgrade, the value will be adjusted proportionally to the remaining time in your billing cycle. In case of downgrade, the new value will be applied in the next cycle.'
+          },
+          {
+            question: 'How does the WhatsApp integration work?',
+            answer: 'Our platform integrates with WhatsApp Business API, allowing your clients to schedule, confirm and cancel appointments directly through WhatsApp. The setup process is simple and guided, and we offer full support during integration.'
+          }
+        ]
+      };
+      return faqs[this.locale] || faqs.pt;
+    },
+    guaranteeTitle() {
+      const titles = {
+        'pt': 'Garantia de Satisfação de 30 Dias',
+        'es': 'Garantía de Satisfacción de 30 Días',
+        'en': '30-Day Satisfaction Guarantee'
+      };
+      return titles[this.locale] || titles.pt;
+    },
+    guaranteeText() {
+      const texts = {
+        'pt': 'Se você não estiver completamente satisfeito com nossa plataforma nos primeiros 30 dias, oferecemos reembolso integral, sem perguntas.',
+        'es': 'Si no estás completamente satisfecho con nuestra plataforma en los primeros 30 días, ofrecemos reembolso completo, sin preguntas.',
+        'en': 'If you\'re not completely satisfied with our platform in the first 30 days, we offer a full refund, no questions asked.'
+      };
+      return texts[this.locale] || texts.pt;
     }
   },
   mounted() {
@@ -357,17 +665,7 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-.save-badge {
-  display: inline-block;
-  background-color: #10b981;
-  color: white;
-  font-size: 0.7rem;
-  padding: 2px 8px;
-  border-radius: 20px;
-  margin-left: 8px;
-  font-weight: 600;
-  animation: pulse 2s infinite;
-}
+
 
 @keyframes pulse {
   0% {
@@ -622,35 +920,62 @@ input:checked + .slider:before {
   transform: translateY(-3px);
 }
 
-/* Guarantee section */
+/* Nuevo estilo para la sección de garantía */
 .pricing-guarantee {
-  background: linear-gradient(45deg, #f9fafb, #f3f4f6);
-  padding: 30px;
+  background: linear-gradient(135deg, #1f0064 0%, #6a11cb 50%, #2575fc 100%);
+  padding: 35px;
   border-radius: 16px;
   text-align: center;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
-  border: 1px solid #e5e7eb;
+  box-shadow: 0 15px 35px rgba(106, 17, 203, 0.3);
+  border: none;
   max-width: 800px;
   margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  color: white;
+}
+
+.pricing-guarantee::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 40%);
+  z-index: 1;
+}
+
+.pricing-guarantee > * {
+  position: relative;
+  z-index: 2;
 }
 
 .guarantee-icon {
-  font-size: 2.5rem;
-  color: #10b981;
+  font-size: 2.8rem;
+  color: white;
   margin-bottom: 15px;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
 }
 
 .pricing-guarantee h4 {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  margin-bottom: 10px;
-  color: #1f2937;
+  margin-bottom: 12px;
+  color: white;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .pricing-guarantee p {
-  font-size: 1rem;
-  color: #6b7280;
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.9);
   margin-bottom: 0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
 }
 
 /* FAQ section */
@@ -748,11 +1073,15 @@ input:checked + .slider:before {
   }
   
   .guarantee-icon {
-    font-size: 2rem;
+    font-size: 2.2rem;
   }
   
   .pricing-guarantee h4 {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
+  }
+  
+  .pricing-guarantee p {
+    font-size: 1rem;
   }
   
   .faq-title {
@@ -763,5 +1092,17 @@ input:checked + .slider:before {
     font-size: 1rem;
     padding: 15px;
   }
+}
+
+.discount-badge {
+  display: inline-block;
+  background-color: #10b981;
+  color: white!important;
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin-left: 8px;
+  font-weight: 600;
+  animation: pulse 2s infinite;
 }
 </style>

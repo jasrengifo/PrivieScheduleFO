@@ -1,0 +1,172 @@
+{
+  "hero": {
+    "title": "Seu Negócio de Beleza, Simplificado",
+    "subtitle": "Sistema inteligente de agendamento que automatiza seus compromissos e otimiza a experiência de seus clientes.",
+    "buttons": {
+      "start": "Começar Agora",
+      "demo": "Ver Demonstração"
+    }
+  },
+  "features": {
+    "title": "Funcionalidades Destacadas",
+    "subtitle": "Tudo o que você precisa para gerenciar seu salão"
+  },
+  "ai": {
+    "title": "Potencialize seu Salão com Inteligência Artificial",
+    "subtitle": "Nossas ferramentas inteligentes automatizam tarefas e maximizam sua produtividade",
+    "features": {
+      "scheduling": {
+        "title": "Agendamento Inteligente",
+        "description": "Otimize espaços em sua agenda e reduza tempos ociosos",
+        "metric": "mais compromissos atendidos"
+      },
+      "assistant": {
+        "title": "Assistente WhatsApp",
+        "description": "Respostas automáticas a perguntas frequentes e agendamento sem intervenção humana",
+        "metric": "atendimento ao cliente"
+      },
+      "analytics": {
+        "title": "Análise Preditiva",
+        "description": "Antecipe tendências de demanda e otimize seu inventário",
+        "metric": "redução de custos"
+      },
+      "matching": {
+        "title": "Correspondência Cliente-Especialista",
+        "description": "Atribua automaticamente o profissional ideal para cada cliente",
+        "metric": "satisfação do cliente"
+      }
+    },
+    "ctaBanner": {
+      "title": "Melhore a experiência dos seus clientes com o poder da IA",
+      "subtitle": "Automatize tarefas repetitivas e concentre-se no que realmente importa: fazer seu negócio crescer",
+      "button": "Experimentar agora"
+    }
+  },
+  "contact": {
+    "title": "Vamos Falar sobre o seu Negócio",
+    "subtitle": "Estamos aqui para responder às suas dúvidas e ajudar a potencializar seu salão de beleza",
+    "welcome": {
+      "title": "Bem-vindo à sua Transformação Digital!",
+      "description": "Preencha o formulário e um especialista entrará em contato para mostrar como nossa plataforma pode se adaptar às suas necessidades específicas.",
+      "satisfaction": "98% de satisfação"
+    },
+    "info": {
+      "support": {
+        "title": "Suporte ao Cliente",
+        "content": "Segunda a Sexta: 9:00 - 18:00<br>Email: suporte@seuapp.com<br>Telefone: +55 11 1234 5678"
+      },
+      "sales": {
+        "title": "Departamento Comercial",
+        "content": "Para consultas sobre planos e preços:<br>Email: vendas@seuapp.com<br>Telefone: +55 11 1234 5679"
+      },
+      "partners": {
+        "title": "Alianças e Colaborações",
+        "content": "Interessado em ser parceiro:<br>Email: parceiros@seuapp.com"
+      }
+    },
+    "social": {
+      "title": "Siga-nos"
+    },
+    "form": {
+      "name": "Nome completo",
+      "email": "E-mail",
+      "phone": "Telefone (opcional)",
+      "businessType": {
+        "label": "Tipo de negócio",
+        "placeholder": "Selecionar...",
+        "options": [
+          "Salão de beleza",
+          "Spa",
+          "Cabelereiro",
+          "Barbearia",
+          "Centro de estética",
+          "Unhas e manicure",
+          "Centro de massagens",
+          "Outro"
+        ]
+      },
+      "interest": {
+        "label": "O que lhe interessa?",
+        "placeholder": "Selecionar...",
+        "options": [
+          "Conhecer mais sobre a plataforma",
+          "Solicitar uma demonstração personalizada",
+          "Informações sobre preços e planos",
+          "Suporte técnico",
+          "Outro"
+        ]
+      },
+      "message": "Como podemos ajudar?",
+      "privacy": "Aceito a <a href='#'>política de privacidade</a> e o tratamento dos meus dados",
+      "submit": "Enviar Mensagem",
+      "submitting": "Enviando...",
+      "success": "Mensagem enviada com sucesso! Entraremos em contato em breve.",
+      "error": "Ocorreu um problema ao enviar a mensagem. Por favor, tente novamente.",
+      "errors": {
+        "name": "O nome é obrigatório",
+        "email": "Por favor, insira um e-mail válido",
+        "phone": "Por favor, insira um número de telefone válido",
+        "message": "Por favor, escreva sua mensagem",
+        "privacy": "Você deve aceitar a política de privacidade"
+      }
+    },
+    "map": {
+      "title": "Nosso Escritório Central",
+      "address": "Rua Inovação 123, 01234-000 São Paulo, Brasil",
+      "viewButton": "Ver no mapa"
+    }
+  },
+  "timeline": {
+    "title": "Transforme seu Negócio em 4 Passos",
+    "subtitle": "Implementação rápida e descomplicada para começar a ver resultados imediatamente",
+    "steps": [
+      {
+        "title": "Configure sua Conta",
+        "description": "Registre-se e personalize seu espaço com os serviços e especialistas do seu salão em menos de 30 minutos. Nosso assistente guiará você em cada etapa.",
+        "note": "Sem conhecimentos técnicos"
+      },
+      {
+        "title": "Personalize sua Agenda",
+        "description": "Defina horários, bloqueie datas especiais e estabeleça regras de agendamento. A IA otimizará automaticamente seus compromissos com base nessas preferências.",
+        "note": "Adaptado ao seu negócio"
+      },
+      {
+        "title": "Integre o WhatsApp",
+        "description": "Conecte seu número do WhatsApp Business e configure o assistente virtual. Seus clientes poderão agendar compromissos por mensagens sem a necessidade de aplicativos adicionais.",
+        "note": "Ativação instantânea"
+      },
+      {
+        "title": "Comece a Receber Reservas",
+        "description": "Convide seus clientes para agendar pelo WhatsApp ou compartilhe seu link personalizado. Comece a ver resultados desde o primeiro dia e esqueça as agendas em papel.",
+        "note": "Resultados imediatos"
+      }
+    ],
+    "cta": {
+      "title": "Pronto para começar?",
+      "description": "Junte-se às centenas de salões que já melhoraram seus negócios com nossa plataforma",
+      "button": "Iniciar meu Teste Gratuito"
+    }
+  },
+  "footer": {
+    "description": "Plataforma de agendamento alimentada por IA que simplifica a gestão de seu salão de beleza e melhora a experiência de seus clientes.",
+    "company": "Empresa",
+    "about": "Sobre nós",
+    "careers": "Carreiras",
+    "blog": "Blog",
+    "resources": "Recursos",
+    "help": "Central de ajuda",
+    "guides": "Guias",
+    "webinars": "Webinars",
+    "newsletter": {
+      "title": "Assine nossa Newsletter",
+      "description": "Receba dicas, novidades e ofertas especiais diretamente na sua caixa de entrada",
+      "placeholder": "Seu e-mail",
+      "loading": "Enviando...",
+      "success": "Obrigado por se inscrever!",
+      "error": "Ocorreu um erro. Tente novamente."
+    },
+    "terms": "Termos de uso",
+    "privacy": "Política de privacidade",
+    "copyright": "© 2023 Privie Schedule. Todos os direitos reservados."
+  }
+} 
