@@ -126,7 +126,7 @@ export default {
   computed: {
     sectionTitle() {
       const titles = {
-        'pt': 'O Futuro do Seu Salão Está Chegando',
+        'pt': 'O Futuro do Seu Salão Já Chegou',
         'es': 'El Futuro de Tu Salón Está Llegando',
         'en': 'The Future of Your Salon is Coming'
       };
@@ -134,7 +134,7 @@ export default {
     },
     sectionSubtitle() {
       const subtitles = {
-        'pt': 'Conheça as novidades que estamos desenvolvendo para tornar seu negócio ainda mais eficiente',
+        'pt': 'Conheça as novidades que estamos a desenvolver para tornar seu negócio ainda mais eficiente',
         'es': 'Conoce las novedades que estamos desarrollando para hacer tu negocio aún más eficiente',
         'en': 'Discover the innovations we are developing to make your business even more efficient'
       };

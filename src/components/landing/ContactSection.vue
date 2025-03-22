@@ -281,7 +281,7 @@ export default {
     },
     contactSubtitle() {
       const subtitles = {
-        'pt': 'Estamos aqui para responder às suas dúvidas e ajudar a potencializar seu salão de beleza',
+        'pt': 'Estamos aqui para responder às suas dúvidas e ajudar a potencializar o seu salão de beleza',
         'es': 'Estamos aquí para responder tus dudas y ayudarte a potenciar tu salón de belleza',
         'en': 'We\'re here to answer your questions and help boost your beauty salon'
       };
@@ -297,7 +297,7 @@ export default {
     },
     welcomeDescription() {
       const descriptions = {
-        'pt': 'Preencha o formulário e um especialista entrará em contato para mostrar como nossa plataforma pode se adaptar às suas necessidades específicas.',
+        'pt': 'Preencha o formulário e um especialista entrará em contacto para mostrar como a nossa plataforma pode adaptar-se às suas necessidades específicas.',
         'es': 'Completa el formulario y un especialista se pondrá en contacto contigo para mostrarte cómo nuestra plataforma puede adaptarse a tus necesidades específicas.',
         'en': 'Fill out the form and a specialist will contact you to show how our platform can adapt to your specific needs.'
       };
@@ -346,12 +346,12 @@ export default {
     formPlaceholders() {
       const placeholders = {
         'pt': {
-          name: 'Seu nome',
+          name: 'O seu nome',
           email: 'seu.email@exemplo.com',
-          phone: '(00) 00000-0000',
+          phone: '(+351) 900 000 000',
           businessType: 'Selecionar...',
           interest: 'Selecionar...',
-          message: 'Digite sua mensagem aqui...'
+          message: 'Escreva a sua mensagem aqui...'
         },
         'es': {
           name: 'Tu nombre',
@@ -378,8 +378,8 @@ export default {
           name: 'O nome é obrigatório',
           email: 'Por favor, insira um e-mail válido',
           phone: 'Por favor, insira um número de telefone válido',
-          message: 'Por favor, escreva sua mensagem',
-          privacy: 'Você deve aceitar a política de privacidade'
+          message: 'Por favor, escreva a sua mensagem',
+          privacy: 'Deve aceitar a política de privacidade'
         },
         'es': {
           name: 'El nombre es obligatorio',
@@ -408,7 +408,7 @@ export default {
     },
     formSubmittingText() {
       const texts = {
-        'pt': 'Enviando...',
+        'pt': 'A enviar...',
         'es': 'Enviando...',
         'en': 'Sending...'
       };
@@ -416,7 +416,7 @@ export default {
     },
     mapTitle() {
       const titles = {
-        'pt': 'Nosso Escritório Central',
+        'pt': 'O Nosso Escritório Central',
         'es': 'Nuestra Oficina Central',
         'en': 'Our Headquarters'
       };
@@ -424,7 +424,7 @@ export default {
     },
     mapAddress() {
       const addresses = {
-        'pt': 'Rua Inovação 123, 01234-000 São Paulo, Brasil',
+        'pt': 'Rua da Inovação 123, 1000-001 Lisboa, Portugal',
         'es': 'Calle Innovación 123, 28001 Madrid, España',
         'en': '123 Innovation Street, New York, NY 10001, USA'
       };
@@ -570,7 +570,7 @@ export default {
         
         // Simulación de respuesta exitosa
         const successMessages = {
-          'pt': 'Mensagem enviada com sucesso! Entraremos em contato em breve.',
+          'pt': 'Mensagem enviada com sucesso! Entraremos em contacto brevemente.',
           'es': '¡Mensaje enviado con éxito! Nos pondremos en contacto contigo pronto.',
           'en': 'Message sent successfully! We\'ll contact you soon.'
         };
