@@ -1,5 +1,5 @@
 <template>
-  <section class="timeline-section py-5">
+  <section class="timeline-section py-5" id="timeline" ref="timelineSection">
     <div class="container">
       <div class="row text-center mb-5">
         <div class="col-lg-8 mx-auto">
@@ -9,7 +9,7 @@
       </div>
 
       <div class="timeline">
-        <div class="timeline-container" v-for="(step, index) in timelineSteps" :key="index" :class="{ 'right': index % 2 !== 0 }">
+        <div class="timeline-container" v-for="(step, index) in timelineSteps" :key="index" :class="{ 'right': index % 2 !== 0 }" @click="trackTimelineItemClick(index, step.title)">
           <div class="timeline-card">
             <div class="timeline-icon">
               <i :class="step.icon"></i>
@@ -171,6 +171,32 @@ export default {
       
       return ctas[this.locale] || ctas.pt;
     }
+  },
+  methods: {
+    trackTimelineItemClick(index, title) {
+      this.$analytics.event('timeline_item_click', {
+        item_index: index,
+        item_title: title,
+        language: this.locale
+      });
+    }
+  },
+  mounted() {
+    // Crear un observer para detectar cuándo el usuario ve la sección de timeline
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          this.$analytics.event('section_view', {
+            section_name: 'timeline',
+            language: this.locale
+          });
+          // Desconectar el observer después de registrar una vez
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+    
+    observer.observe(this.$refs.timelineSection);
   }
 }
 </script>
@@ -182,8 +208,6 @@ export default {
   position: relative;
   overflow: hidden;
 }
-
-
 
 .timeline-section::before {
   content: '';

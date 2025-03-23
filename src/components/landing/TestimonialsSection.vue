@@ -1,5 +1,5 @@
 <template>
-  <section class="testimonials-section py-5 bg-light">
+  <section class="testimonials-section py-5 bg-light" id="testimonials" ref="testimonialsSection">
     <div class="container">
       <div class="row text-center mb-5">
         <div class="col-lg-8 mx-auto">
@@ -29,8 +29,14 @@
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n';
+
 export default {
   name: 'TestimonialsSection',
+  setup() {
+    const { locale } = useI18n();
+    return { locale };
+  },
   data() {
     return {
       testimonials: [
@@ -52,8 +58,45 @@ export default {
           avatar: 'https://this-person-does-not-exist.com/img/avatar-genf9c6cd7dfe15451be835c48e6f1ece8c.jpg',
           content: 'Las estadísticas en tiempo real me ayudan a entender qué servicios son más populares en diferentes temporadas. Ahora planifico mucho mejor mis inventarios y capacitaciones.'
         }
-      ]
+      ],
+      activeIndex: 0
     }
+  },
+  methods: {
+    nextTestimonial() {
+      this.activeIndex = (this.activeIndex + 1) % this.testimonials.length;
+      this.trackTestimonialNav('next');
+    },
+    
+    prevTestimonial() {
+      this.activeIndex = (this.activeIndex - 1 + this.testimonials.length) % this.testimonials.length;
+      this.trackTestimonialNav('prev');
+    },
+    
+    trackTestimonialNav(direction) {
+      this.$analytics.event('testimonial_navigation', {
+        direction: direction,
+        current_index: this.activeIndex,
+        language: this.locale
+      });
+    }
+  },
+  mounted() {
+    // Crear un observer para detectar cuándo el usuario ve la sección de testimonios
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          this.$analytics.event('section_view', {
+            section_name: 'testimonials',
+            language: this.locale
+          });
+          // Desconectar el observer después de registrar una vez
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+    
+    observer.observe(this.$refs.testimonialsSection);
   }
 }
 </script>

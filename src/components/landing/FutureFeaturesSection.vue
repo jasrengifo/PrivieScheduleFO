@@ -189,6 +189,22 @@ export default {
 
     // Arreglar el problema de ancho del #app
     this.fixAppWidth();
+
+    // Crear un observer para detectar cuándo el usuario ve la sección
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          this.$analytics.event('section_view', {
+            section_name: 'future_features',
+            language: this.locale
+          });
+          // Desconectar el observer después de registrar una vez
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+    
+    observer.observe(this.$refs.futureSection);
   },
   beforeUnmount() {
     // Limpiar los observers cuando el componente se desmonte
@@ -243,6 +259,20 @@ export default {
       if (appElement) {
         appElement.style.width = '100%';
       }
+    },
+    trackFeatureClick(index, title) {
+      this.$analytics.event('future_feature_click', {
+        feature_index: index,
+        feature_title: title,
+        language: this.locale
+      });
+    },
+    trackCtaClick(buttonId) {
+      this.$analytics.event('cta_click', {
+        button_id: buttonId,
+        section: 'future_features',
+        language: this.locale
+      });
     }
   }
 }

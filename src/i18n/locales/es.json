@@ -56,8 +56,8 @@
         "content": "Lunes a Viernes: 9:00 - 18:00<br>Email: soporte@tuapp.com<br>Teléfono: +34 91 123 4567"
       },
       "sales": {
-        "title": "Departamento Comercial",
-        "content": "Para consultas sobre planes y precios:<br>Email: ventas@tuapp.com<br>Teléfono: +34 91 123 4568"
+        "title": "Ventas",
+        "content": "Para consultas sobre planes y precios:<br/>Email: ventas@tuapp.com<br/>Teléfono: +34 91 123 4567"
       },
       "partners": {
         "title": "Alianzas y Colaboraciones",

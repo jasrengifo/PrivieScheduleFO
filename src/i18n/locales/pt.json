@@ -53,15 +53,23 @@
     "info": {
       "support": {
         "title": "Suporte ao Cliente",
-        "content": "Segunda a Sexta: 9:00 - 18:00<br>Email: suporte@seuapp.com<br>Telefone: +55 11 1234 5678"
+        "hours": "Segunda a Sexta: 9:00 - 18:00",
+        "emailPrefix": "Email: suporte",
+        "emailDomain": "seuapp.com",
+        "phone": "Telefone: +55 11 1234 5678"
       },
       "sales": {
-        "title": "Departamento Comercial",
-        "content": "Para consultas sobre planos e preços:<br>Email: vendas@seuapp.com<br>Telefone: +55 11 1234 5679"
+        "title": "Vendas",
+        "intro": "Para consultas sobre planos e preços:",
+        "emailPrefix": "Email: vendas",
+        "emailDomain": "seuapp.com",
+        "phone": "Telefone: +55 11 1234 5679"
       },
       "partners": {
         "title": "Alianças e Colaborações",
-        "content": "Interessado em ser parceiro:<br>Email: parceiros@seuapp.com"
+        "intro": "Interessado em ser parceiro:",
+        "emailPrefix": "Email: parceiros",
+        "emailDomain": "seuapp.com"
       }
     },
     "social": {

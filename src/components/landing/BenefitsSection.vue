@@ -15,7 +15,7 @@
 
       <div class="benefits-grid">
         <div class="row g-4">
-          <div class="col-md-6 col-lg-4" v-for="(benefit, index) in benefitItems" :key="index" :ref="el => { if (el) benefitRefs[index] = el }">
+          <div class="col-md-6 col-lg-4" v-for="(benefit, index) in benefitItems" :key="index" :ref="el => { if (el) benefitRefs[index] = el }" @click="trackBenefitClick(benefit.title)">
             <div class="benefit-card" 
                  :class="{'benefit-visible': benefitInView[index]}" 
                  ref="benefitCards">
@@ -263,6 +263,22 @@ export default {
     });
 
     this.setupIntersectionObserver();
+
+    // Crear un observer para detectar cuándo el usuario ve la sección
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          this.$analytics.event('section_view', {
+            section_name: 'benefits',
+            language: this.locale
+          });
+          // Desconectar el observer después de registrar una vez
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+    
+    observer.observe(this.$refs.benefitsSection);
   },
   beforeUnmount() {
     // Limpiar observers cuando el componente se desmonte
@@ -304,6 +320,12 @@ export default {
         if (ref) {
           this.observer.observe(ref);
         }
+      });
+    },
+    trackBenefitClick(benefitTitle) {
+      this.$analytics.event('benefit_click', {
+        benefit_title: benefitTitle,
+        language: this.locale
       });
     }
   }

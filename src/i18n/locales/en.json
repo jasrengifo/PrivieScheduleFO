@@ -56,8 +56,8 @@
         "content": "Monday to Friday: 9:00 - 18:00<br>Email: support@yourapp.com<br>Phone: +1 123 456 7890"
       },
       "sales": {
-        "title": "Sales Department",
-        "content": "For inquiries about plans and pricing:<br>Email: sales@yourapp.com<br>Phone: +1 123 456 7891"
+        "title": "Sales",
+        "content": "For inquiries about plans and pricing:<br/>Email: sales@yourapp.com<br/>Phone: +1 123 456 7890"
       },
       "partners": {
         "title": "Alliances and Collaborations",

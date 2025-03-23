@@ -5,9 +5,9 @@
         <div class="col-lg-8 text-center">
           <h2 class="section-title">{{ contactTitle }}</h2>
           <p class="section-subtitle">{{ contactSubtitle }}</p>
-        </div>
-      </div>
-      
+              </div>
+            </div>
+            
       <div class="row g-4">
         <div class="col-lg-5 mb-4 mb-lg-0">
           <div class="contact-info" ref="contactInfo">
@@ -24,7 +24,7 @@
                     <i class="fas fa-star"></i>
                   </div>
                   <span>{{ satisfactionRating }}</span>
-                </div>
+              </div>
               </div>
             </div>
             
@@ -34,10 +34,14 @@
               </div>
               <div class="info-content">
                 <h4>{{ item.title }}</h4>
-                <p v-html="item.content"></p>
-              </div>
+                <p>
+                  {{ item.intro }}<br/>
+                  {{ item.emailPrefix }}@{{ item.emailDomain }}<br/>
+                  <template v-if="item.phone">{{ item.phone }}</template>
+                </p>
             </div>
-            
+          </div>
+          
           </div>
         </div>
         
@@ -55,6 +59,7 @@
                       v-model="formData.name"
                       :class="{'is-invalid': errors.name}"
                       required
+                      @focus="trackFieldFocus('name')"
                     >
                     <label for="name">{{ formLabels.name }}</label>
                     <div class="invalid-feedback" v-if="errors.name">{{ formErrors.name }}</div>
@@ -71,6 +76,7 @@
                       v-model="formData.email"
                       :class="{'is-invalid': errors.email}"
                       required
+                      @focus="trackFieldFocus('email')"
                     >
                     <label for="email">{{ formLabels.email }}</label>
                     <div class="invalid-feedback" v-if="errors.email">{{ formErrors.email }}</div>
@@ -86,6 +92,7 @@
                       :placeholder="formPlaceholders.phone" 
                       v-model="formData.phone"
                       :class="{'is-invalid': errors.phone}"
+                      @focus="trackFieldFocus('phone')"
                     >
                     <label for="phone">{{ formLabels.phone }}</label>
                     <div class="invalid-feedback" v-if="errors.phone">{{ formErrors.phone }}</div>
@@ -99,6 +106,7 @@
                       id="businessType" 
                       v-model="formData.businessType"
                       required
+                      @change="trackFieldFocus('businessType')"
                     >
                       <option value="" disabled selected>{{ formPlaceholders.businessType }}</option>
                       <option v-for="(type, index) in businessTypes" :key="index" :value="type">
@@ -107,8 +115,8 @@
                     </select>
                     <label for="businessType">{{ formLabels.businessType }}</label>
                   </div>
-                </div>
-                
+              </div>
+              
                 <div class="col-12">
                   <div class="form-floating">
                     <select 
@@ -116,6 +124,7 @@
                       id="interest" 
                       v-model="formData.interest"
                       required
+                      @change="trackFieldFocus('interest')"
                     >
                       <option value="" disabled selected>{{ formPlaceholders.interest }}</option>
                       <option v-for="(option, index) in interestOptions" :key="index" :value="option">
@@ -124,8 +133,8 @@
                     </select>
                     <label for="interest">{{ formLabels.interest }}</label>
                   </div>
-                </div>
-                
+              </div>
+              
                 <div class="col-12">
                   <div class="form-floating">
                     <textarea 
@@ -136,12 +145,13 @@
                       :class="{'is-invalid': errors.message}"
                       style="height: 120px"
                       required
+                      @focus="trackFieldFocus('message')"
                     ></textarea>
                     <label for="message">{{ formLabels.message }}</label>
                     <div class="invalid-feedback" v-if="errors.message">{{ formErrors.message }}</div>
                   </div>
-                </div>
-                
+              </div>
+              
                 <div class="col-12">
                   <div class="form-check privacy-check">
                     <input 
@@ -151,13 +161,14 @@
                       v-model="formData.privacyAccepted"
                       :class="{'is-invalid': errors.privacy}"
                       required
+                      @change="trackFieldFocus('privacy')"
                     >
                     <label class="form-check-label" for="privacyPolicy" v-html="formLabels.privacy">
                     </label>
                     <div class="invalid-feedback" v-if="errors.privacy">{{ formErrors.privacy }}</div>
                   </div>
-                </div>
-                
+              </div>
+              
                 <div class="col-12">
                   <div class="form-buttons">
                     <button type="submit" class="btn btn-primary btn-lg" :disabled="isSubmitting">
@@ -228,23 +239,6 @@ export default {
       responseMessage: '',
       responseStatus: '',
       mapLoaded: false,
-      contactInfoItems: [
-        {
-          icon: 'fas fa-headset',
-          title: this.$t('contact.info.support.title'),
-          content: this.$t('contact.info.support.content')
-        },
-        {
-          icon: 'fas fa-briefcase',
-          title: this.$t('contact.info.sales.title'),
-          content: this.$t('contact.info.sales.content')
-        },
-        {
-          icon: 'fas fa-handshake',
-          title: this.$t('contact.info.partners.title'),
-          content: this.$t('contact.info.partners.content')
-        }
-      ],
       socialMedia: [
         { icon: 'fab fa-facebook-f', url: '#' },
         { icon: 'fab fa-instagram', url: '#' },
@@ -498,10 +492,38 @@ export default {
         ]
       };
       return options[this.locale] || options.pt;
+    },
+    contactInfoItems() {
+      return [
+        {
+          icon: 'fas fa-headset',
+          title: this.$t('contact.info.support.title'),
+          intro: this.$t('contact.info.support.hours'),
+          emailPrefix: this.$t('contact.info.support.emailPrefix'),
+          emailDomain: this.$t('contact.info.support.emailDomain'),
+          phone: this.$t('contact.info.support.phone')
+        },
+        {
+          icon: 'fas fa-briefcase',
+          title: this.$t('contact.info.sales.title'),
+          intro: this.$t('contact.info.sales.intro'),
+          emailPrefix: this.$t('contact.info.sales.emailPrefix'),
+          emailDomain: this.$t('contact.info.sales.emailDomain'),
+          phone: this.$t('contact.info.sales.phone')
+        },
+        {
+          icon: 'fas fa-handshake',
+          title: this.$t('contact.info.partners.title'),
+          intro: this.$t('contact.info.partners.intro'),
+          emailPrefix: this.$t('contact.info.partners.emailPrefix'),
+          emailDomain: this.$t('contact.info.partners.emailDomain')
+        }
+      ];
     }
   },
   mounted() {
     this.animateElements();
+    this.trackSectionView();
   },
   methods: {
     animateElements() {
@@ -555,6 +577,15 @@ export default {
         isValid = false;
       }
       
+      // Registrar eventos de validación fallida
+      if (Object.keys(this.errors).length > 0) {
+        this.$analytics.event('form_validation_error', {
+          form_id: 'contact_form',
+          error_fields: Object.keys(this.errors).join(','),
+          language: this.locale
+        });
+      }
+      
       return isValid;
     },
     async submitForm() {
@@ -578,6 +609,15 @@ export default {
         this.responseMessage = successMessages[this.locale] || successMessages.pt;
         this.responseStatus = 'text-success';
         
+        // Registrar el envío exitoso del formulario
+        this.$analytics.event('form_submission', {
+          form_id: 'contact_form',
+          business_type: this.formData.businessType,
+          interest: this.formData.interest,
+          has_phone: !!this.formData.phone,
+          language: this.locale
+        });
+        
         // Resetear formulario después de envío exitoso
         this.formData = {
           name: '',
@@ -600,6 +640,13 @@ export default {
         this.responseMessage = errorMessages[this.locale] || errorMessages.pt;
         this.responseStatus = 'text-danger';
         console.error('Error sending form:', error);
+        
+        // Registrar el error en el envío
+        this.$analytics.event('form_submission_error', {
+          form_id: 'contact_form',
+          error_type: error.message || 'unknown',
+          language: this.locale
+        });
       } finally {
         this.isSubmitting = false;
       }
@@ -608,6 +655,38 @@ export default {
       // Cargar iframe de Google Maps solo cuando el usuario lo solicite
       this.$refs.mapFrame.src = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12144.53173462213!2d-3.7031!3d40.4169!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd422997800a3c81%3A0xc436dec1618c2269!2sMadrid%2C%20Espa%C3%B1a!5e0!3m2!1ses!2ses!4v1637300000000!5m2!1ses!2ses";
       this.mapLoaded = true;
+    },
+    trackFieldFocus(fieldName) {
+      this.$analytics.event('form_field_focus', {
+        form_id: 'contact_form',
+        field_name: fieldName,
+        language: this.locale
+      });
+    },
+    trackSectionView() {
+      // Crear un observer para detectar cuándo el usuario ve la sección de contacto
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            this.$analytics.event('section_view', {
+              section_name: 'contact',
+              language: this.locale
+            });
+            // Desconectar el observer después de registrar una vez
+            observer.disconnect();
+          }
+        });
+      }, { threshold: 0.3 });
+      
+      observer.observe(this.$refs.contactSection);
+    },
+    formatEmailContent(contentKey, emailUser, emailDomain) {
+      // Obtener la cadena de texto base, sin direcciones de correo electrónico
+      let baseContent = this.$t(contentKey, { email: '' });
+      
+      // Reemplazar todos los marcadores de posición del correo con el correo real
+      // pero construido dinámicamente para evitar el símbolo @ en las traducciones
+      return baseContent.replace(/Email: [^<]*/, 'Email: ' + emailUser + '@' + emailDomain);
     }
   }
 }

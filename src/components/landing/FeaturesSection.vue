@@ -1,5 +1,5 @@
 <template>
-  <section class="features-section py-5">
+  <section class="features-section py-5" id="features" ref="featuresSection">
     <div class="container">
       <div class="row text-center mb-5">
         <div class="col-lg-8 mx-auto">
@@ -41,6 +41,9 @@
           </ul>
         </div>
       </div>
+    </div>
+    <div class="cta-container">
+      <a href="#pricing" class="btn btn-primary" @click="trackCtaClick('features_pricing')">{{ ctaButtonText }}</a>
     </div>
   </section>
 </template>
@@ -143,6 +146,39 @@ export default {
       };
       return benefits[this.locale] || benefits.pt;
     }
+  },
+  methods: {
+    trackFeatureClick(featureTitle) {
+      this.$analytics.event('feature_click', {
+        feature_title: featureTitle,
+        language: this.locale
+      });
+    },
+    
+    trackCtaClick(buttonId) {
+      this.$analytics.event('cta_click', {
+        button_id: buttonId,
+        section: 'features',
+        language: this.locale
+      });
+    }
+  },
+  mounted() {
+    // Crear un observer para detectar cuándo el usuario ve la sección
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          this.$analytics.event('section_view', {
+            section_name: 'features',
+            language: this.locale
+          });
+          // Desconectar el observer después de registrar una vez
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.3 }); // Se dispara cuando al menos 30% de la sección está visible
+    
+    observer.observe(this.$refs.featuresSection);
   }
 };
 </script>

@@ -4,7 +4,7 @@ import BookingFlow from '../views/booking/BookingFlow.vue';
 const routes = [
   {
     path: '/',
-    redirect: '/landing'
+    component: () => import('../views/website/LandingPage.vue')
   },
   {
     path: '/landing',

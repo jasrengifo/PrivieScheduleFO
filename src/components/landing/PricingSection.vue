@@ -55,7 +55,7 @@
             </div>
             
             <div class="pricing-action">
-              <button class="btn" :class="plan.buttonClass">{{ plan.buttonText }}</button>
+              <button class="btn" :class="plan.buttonClass" @click="trackPlanSelection(plan.name, isYearly ? 'annual' : 'monthly')">{{ plan.buttonText }}</button>
             </div>
             
             <div class="pricing-footer" v-if="plan.footerText">
@@ -523,6 +523,22 @@ export default {
     
     // Activar animación pulsante en el plan popular
     this.initPopularHighlight();
+
+    // Crear un observer para detectar cuándo el usuario ve la sección de precios
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          this.$analytics.event('section_view', {
+            section_name: 'pricing',
+            language: this.locale
+          });
+          // Desconectar el observer después de registrar una vez
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+    
+    observer.observe(this.$refs.pricingSection);
   },
   beforeUnmount() {
     // Limpiar observers cuando el componente se desmonte
@@ -544,6 +560,22 @@ export default {
           this.highlightPopular = false;
         }, 1000);
       }, 5000);
+    },
+    togglePricing() {
+      this.isYearly = !this.isYearly;
+      
+      // Registrar cambio de plan de precio
+      this.$analytics.event('pricing_toggle', {
+        plan_type: this.isYearly ? 'annual' : 'monthly',
+        language: this.locale
+      });
+    },
+    trackPlanSelection(planName, planType) {
+      this.$analytics.event('plan_selection', {
+        plan_name: planName,
+        plan_type: planType,
+        language: this.locale
+      });
     }
   }
 }

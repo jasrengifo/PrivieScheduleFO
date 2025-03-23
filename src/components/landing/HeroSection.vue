@@ -1,5 +1,5 @@
 <template>
-  <section class="hero-section d-flex align-items-center">
+  <section class="hero-section d-flex align-items-center" id="home">
     <!-- Selector de idioma -->
 
     
@@ -10,8 +10,8 @@
             <h1>{{ $t('hero.title') }}</h1>
             <p>{{ $t('hero.subtitle') }}</p>
             <div class="hero-buttons">
-              <button class="btn btn-primary me-3">{{ $t('hero.buttons.start') }}</button>
-              <button class="btn btn-outline-light">{{ $t('hero.buttons.demo') }}</button>
+              <button class="btn btn-primary me-0 me-md-3" @click="trackCtaClick('hero_start')">{{ $t('hero.buttons.start') }}</button>
+              <button class="btn btn-outline-light" @click="trackCtaClick('hero_demo')">{{ $t('hero.buttons.demo') }}</button>
             </div>
           </div>
         </div>
@@ -19,7 +19,7 @@
           <!-- Mantener la animación de entrada y rebote infinito al logo -->
           <img src="/img/logo.svg" 
                alt="Salón de belleza moderno" 
-               class="img-fluid rounded-3 logo-animation"
+               class="img-fluid mt-5 mt-lg-0 rounded-3 logo-animation"
                ref="logoElement">
         </div>
       </div>
@@ -28,10 +28,15 @@
 </template>
 
 <script>
+import { useI18n } from 'vue-i18n';
 
 export default {
   name: 'HeroSection',
   components: {
+  },
+  setup() {
+    const { locale } = useI18n();
+    return { locale };
   },
   mounted() {
     // Cuando el componente se monte, aplicamos la animación de entrada
@@ -45,6 +50,22 @@ export default {
       logo.classList.remove('animate-entrance');
       logo.classList.add('animate-bounce');
     }, 1500); // 1.5 segundos para la animación de entrada
+
+    // Registrar visualización de la sección hero
+    this.$analytics.event('section_view', {
+      section_name: 'hero',
+      language: this.locale
+    });
+  },
+  methods: {
+    trackCtaClick(buttonId) {
+      this.$analytics.event('cta_click', {
+        button_id: buttonId,
+        section: 'hero',
+        language: this.locale,
+        page_position: 'top'
+      });
+    }
   }
 };
 </script>
