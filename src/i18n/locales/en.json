@@ -8,8 +8,9 @@
     }
   },
   "features": {
-    "title": "Featured Functionalities",
-    "subtitle": "Everything you need to manage your salon"
+    "title": "Featured Capabilities",
+    "subtitle": "Everything you need to manage your salon",
+    "cta": "View All Features"
   },
   "ai": {
     "title": "Power Your Salon with Artificial Intelligence",

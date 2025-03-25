@@ -9,7 +9,8 @@
   },
   "features": {
     "title": "Funcionalidades Destacadas",
-    "subtitle": "Tudo o que você precisa para gerenciar seu salão"
+    "subtitle": "Tudo o que você precisa para gerenciar seu salão",
+    "cta": "Ver Todos os Recursos"
   },
   "ai": {
     "title": "Potencialize seu Salão com Inteligência Artificial",
@@ -54,22 +55,23 @@
       "support": {
         "title": "Suporte ao Cliente",
         "hours": "Segunda a Sexta: 9:00 - 18:00",
-        "emailPrefix": "Email: suporte",
-        "emailDomain": "seuapp.com",
-        "phone": "Telefone: +55 11 1234 5678"
+        "emailPrefix": "Email: support",
+        "emailDomain": "privie.pt",
+        "phone": "Telefone: +351 932 862 263"
       },
       "sales": {
         "title": "Vendas",
         "intro": "Para consultas sobre planos e preços:",
-        "emailPrefix": "Email: vendas",
-        "emailDomain": "seuapp.com",
-        "phone": "Telefone: +55 11 1234 5679"
+        "emailPrefix": "Email: sales",
+        "emailDomain": "privie.pt",
+        "phone": "Telefone: +351 932 862 263"
       },
       "partners": {
         "title": "Alianças e Colaborações",
         "intro": "Interessado em ser parceiro:",
-        "emailPrefix": "Email: parceiros",
-        "emailDomain": "seuapp.com"
+        "emailPrefix": "Email: partners",
+        "emailDomain": "privie.pt",
+        "phone": "Telefone: +351 932 862 263"
       }
     },
     "social": {

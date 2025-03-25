@@ -47,7 +47,7 @@
         
         <div class="col-lg-7">
           <div class="contact-form-container" ref="formContainer">
-            <form class="contact-form" @submit.prevent="submitForm">
+            <form v-if="!formSubmitted" class="contact-form" @submit.prevent="submitForm">
               <div class="row g-4">
                 <div class="col-md-6">
                   <div class="form-floating">
@@ -178,10 +178,14 @@
                       </div>
                     </button>
                   </div>
-                  <p class="response-message text-center mt-3" :class="responseStatus">{{ responseMessage }}</p>
+                  <div class="response-message text-center mt-3" :class="responseStatus" v-html="responseMessage"></div>
                 </div>
               </div>
             </form>
+            <div v-else class="text-center py-5">
+              <i class="fas fa-check-circle text-success mb-3" style="font-size: 3rem;"></i>
+              <div class="response-message" :class="responseStatus" v-html="responseMessage"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -239,6 +243,7 @@ export default {
       responseMessage: '',
       responseStatus: '',
       mapLoaded: false,
+      formSubmitted: false,
       socialMedia: [
         { icon: 'fab fa-facebook-f', url: '#' },
         { icon: 'fab fa-instagram', url: '#' },
@@ -596,10 +601,62 @@ export default {
       this.isSubmitting = true;
       
       try {
-        // Simulación de envío de formulario (reemplazar con llamada API real)
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/contact/submit`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-API-KEY': import.meta.env.VITE_API_KEY
+          },
+          body: JSON.stringify({
+            full_name: this.formData.name,
+            email: this.formData.email,
+            phone: this.formData.phone,
+            business_type_id: 1,
+            interest_id: 1,
+            message: this.formData.message,
+            language: this.locale,
+            accept_terms: this.formData.privacyAccepted
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          // Manejo específico de errores de validación (422)
+          if (response.status === 422 && data.errors) {
+            const errorMessages = {
+              'pt': 'Ops! Encontramos alguns erros no formulário:',
+              'es': '¡Ups! Encontramos algunos errores en el formulario:',
+              'en': 'Oops! We found some errors in the form:'
+            };
+            
+            let errorList = '<div class="alert alert-danger mt-2">';
+            Object.entries(data.errors).forEach(([field, messages]) => {
+              errorList += `<div class="d-flex align-items-center mb-2">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <span>${messages[0]}</span>
+              </div>`;
+            });
+            errorList += '</div>';
+            
+            this.responseMessage = `${errorMessages[this.locale] || errorMessages.pt}${errorList}`;
+            this.responseStatus = 'text-danger';
+            
+            // Registrar el error de validación
+            this.$analytics.event('form_validation_error', {
+              form_id: 'contact_form',
+              error_fields: Object.keys(data.errors).join(','),
+              language: this.locale
+            });
+            
+            return;
+          }
+          
+          throw new Error(data.message || 'Error en el envío');
+        }
         
-        // Simulación de respuesta exitosa
+        // Mensajes de éxito según el idioma
         const successMessages = {
           'pt': 'Mensagem enviada com sucesso! Entraremos em contacto brevemente.',
           'es': '¡Mensaje enviado con éxito! Nos pondremos en contacto contigo pronto.',
@@ -608,6 +665,7 @@ export default {
         
         this.responseMessage = successMessages[this.locale] || successMessages.pt;
         this.responseStatus = 'text-success';
+        this.formSubmitted = true;
         
         // Registrar el envío exitoso del formulario
         this.$analytics.event('form_submission', {
@@ -617,17 +675,6 @@ export default {
           has_phone: !!this.formData.phone,
           language: this.locale
         });
-        
-        // Resetear formulario después de envío exitoso
-        this.formData = {
-          name: '',
-          email: '',
-          phone: '',
-          businessType: '',
-          interest: '',
-          message: '',
-          privacyAccepted: false
-        };
         
       } catch (error) {
         // Manejo de error
@@ -931,11 +978,21 @@ textarea.form-control {
 
 .privacy-check {
   margin-top: 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.form-check-input {
+  margin-top: 3px;
+  flex-shrink: 0;
 }
 
 .form-check-label {
   font-size: 0.95rem;
   color: #64748b;
+  line-height: 1.5;
+  flex-grow: 1;
 }
 
 .form-check-label a {
@@ -986,6 +1043,23 @@ textarea.form-control {
   margin-top: 20px;
   opacity: 0;
   animation: fadeIn 0.5s forwards;
+}
+
+.alert {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+}
+
+.alert-danger {
+  color: #842029;
+  background-color: #f8d7da;
+  border-color: #f5c2c7;
+}
+
+.alert-danger i {
+  color: #842029;
 }
 
 @keyframes fadeIn {

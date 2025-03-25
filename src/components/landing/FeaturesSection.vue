@@ -10,7 +10,7 @@
       
       <div class="row align-items-center mb-5">
         <div class="col-md-6 order-md-2">
-          <img src="https://picsum.photos/600/400?random=3" 
+          <img src="/img/landing/shced.webp" 
                alt="Calendario inteligente" 
                class="img-fluid rounded-3 shadow">
         </div>
@@ -27,7 +27,7 @@
       
       <div class="row align-items-center mb-5">
         <div class="col-md-6">
-          <img src="https://picsum.photos/600/400?random=4" 
+          <img src="/img/landing/ws.webp" 
                alt="Chat de WhatsApp" 
                class="img-fluid rounded-3 shadow">
         </div>
@@ -43,7 +43,9 @@
       </div>
     </div>
     <div class="cta-container">
-      <a href="#pricing" class="btn btn-primary" @click="trackCtaClick('features_pricing')">{{ ctaButtonText }}</a>
+      <a href="#pricing" class="btn btn-primary" @click="trackCtaClick('features_pricing')">
+        {{ ctaButtonText }}
+      </a>
     </div>
   </section>
 </template>
@@ -145,6 +147,14 @@ export default {
         ]
       };
       return benefits[this.locale] || benefits.pt;
+    },
+    ctaButtonText() {
+      const texts = {
+        'pt': 'Ver planos',
+        'es': 'Ver planes',
+        'en': 'View plans'
+      };
+      return texts[this.locale] || texts.pt;
     }
   },
   methods: {

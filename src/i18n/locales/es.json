@@ -8,8 +8,9 @@
     }
   },
   "features": {
-    "title": "Funcionalidades Destacadas",
-    "subtitle": "Todo lo que necesitas para gestionar tu salón"
+    "title": "Características Destacadas",
+    "subtitle": "Todo lo que necesitas para gestionar tu salón",
+    "cta": "Ver Todas las Características"
   },
   "ai": {
     "title": "Potencia tu Salón con Inteligencia Artificial",
