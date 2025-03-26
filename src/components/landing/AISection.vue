@@ -71,7 +71,7 @@
               <p>Automatiza tareas repetitivas y enfócate en lo que realmente importa: hacer crecer tu negocio</p>
             </div>
             <div class="col-md-4 text-md-end mt-3 mt-md-0">
-              <a href="#pricing" class="btn btn-light btn-glow">
+              <a href="#contact" class="btn btn-light btn-glow">
                 Probar ahora
                 <i class="fas fa-arrow-right ms-2"></i>
               </a>

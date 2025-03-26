@@ -67,7 +67,7 @@
       <div class="row mt-5">
         <div class="col-12 text-center">
           <p class="future-cta-text">{{ ctaTitle }}</p>
-          <button class="btn btn-gradient btn-lg">{{ ctaButton }}</button>
+          <a href="#contact"><button class="btn btn-gradient btn-lg">{{ ctaButton }}</button></a>
         </div>
       </div>
     </div>

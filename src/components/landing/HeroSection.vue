@@ -10,8 +10,8 @@
             <h1>{{ $t('hero.title') }}</h1>
             <p>{{ $t('hero.subtitle') }}</p>
             <div class="hero-buttons">
-              <button class="btn btn-primary me-0 me-md-3" @click="trackCtaClick('hero_start')">{{ $t('hero.buttons.start') }}</button>
-              <button class="btn btn-outline-light" @click="trackCtaClick('hero_demo')">{{ $t('hero.buttons.demo') }}</button>
+              <a href="#contact"><button class="btn btn-primary me-0 me-md-3" @click="trackCtaClick('hero_start')">{{ $t('hero.buttons.start') }}</button></a>
+              <a href="#contact"><button class="btn btn-outline-light" @click="trackCtaClick('hero_demo')">{{ $t('hero.buttons.demo') }}</button></a>
             </div>
           </div>
         </div>

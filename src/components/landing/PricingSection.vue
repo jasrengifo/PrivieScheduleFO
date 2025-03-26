@@ -55,7 +55,7 @@
             </div>
             
             <div class="pricing-action">
-              <button class="btn" :class="plan.buttonClass" @click="trackPlanSelection(plan.name, isYearly ? 'annual' : 'monthly')">{{ plan.buttonText }}</button>
+              <a href="#contact"><button class="btn" :class="plan.buttonClass" @click="trackPlanSelection(plan.name, isYearly ? 'annual' : 'monthly')">{{ plan.buttonText }}</button></a>
             </div>
             
             <div class="pricing-footer" v-if="plan.footerText">

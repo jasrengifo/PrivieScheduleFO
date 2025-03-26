@@ -1,5 +1,5 @@
 <template>
-  <section class="contact-section py-5" ref="contactSection">
+  <section class="contact-section py-5" id="contact" ref="contactSection">
     <div class="container">
       <div class="row justify-content-center mb-5">
         <div class="col-lg-8 text-center">
@@ -9,7 +9,7 @@
             </div>
             
       <div class="row g-4">
-        <div class="col-lg-5 mb-4 mb-lg-0">
+        <div class="col-lg-5 mb-4 mb-lg-0 order-2 order-lg-1">
           <div class="contact-info" ref="contactInfo">
             <div class="info-card welcome-card">
               <div class="info-card-content">
@@ -45,7 +45,7 @@
           </div>
         </div>
         
-        <div class="col-lg-7">
+        <div class="col-lg-7 order-1 order-lg-2">
           <div class="contact-form-container" ref="formContainer">
             <form v-if="!formSubmitted" class="contact-form" @submit.prevent="submitForm">
               <div class="row g-4">
@@ -104,31 +104,39 @@
                     <select 
                       class="form-select" 
                       id="businessType" 
-                      v-model="formData.businessType"
+                      v-model="formData.business_type_id"
                       required
                       @change="trackFieldFocus('businessType')"
                     >
                       <option value="" disabled selected>{{ formPlaceholders.businessType }}</option>
-                      <option v-for="(type, index) in businessTypes" :key="index" :value="type">
-                        {{ type }}
+                      <option 
+                        v-for="type in businessTypes" 
+                        :key="type.id" 
+                        :value="type.id"
+                      >
+                        {{ type.translations[locale]?.name || type.translations['en'].name }}
                       </option>
                     </select>
                     <label for="businessType">{{ formLabels.businessType }}</label>
                   </div>
-              </div>
-              
+                </div>
+                
                 <div class="col-12">
                   <div class="form-floating">
                     <select 
                       class="form-select" 
                       id="interest" 
-                      v-model="formData.interest"
+                      v-model="formData.interest_id"
                       required
                       @change="trackFieldFocus('interest')"
                     >
                       <option value="" disabled selected>{{ formPlaceholders.interest }}</option>
-                      <option v-for="(option, index) in interestOptions" :key="index" :value="option">
-                        {{ option }}
+                      <option 
+                        v-for="interest in interests" 
+                        :key="interest.id" 
+                        :value="interest.id"
+                      >
+                        {{ interest.translations[locale]?.name || interest.translations['en'].name }}
                       </option>
                     </select>
                     <label for="interest">{{ formLabels.interest }}</label>
@@ -233,8 +241,8 @@ export default {
         name: '',
         email: '',
         phone: '',
-        businessType: '',
-        interest: '',
+        business_type_id: '',
+        interest_id: '',
         message: '',
         privacyAccepted: false
       },
@@ -244,21 +252,13 @@ export default {
       responseStatus: '',
       mapLoaded: false,
       formSubmitted: false,
+      interests: [],
+      businessTypes: [],
       socialMedia: [
         { icon: 'fab fa-facebook-f', url: '#' },
         { icon: 'fab fa-instagram', url: '#' },
         { icon: 'fab fa-linkedin-in', url: '#' },
         { icon: 'fab fa-twitter', url: '#' }
-      ],
-      businessTypes: [
-        'Salão de beleza',
-        'Spa',
-        'Cabelereiro',
-        'Barbearia',
-        'Centro de estética',
-        'Unhas e manicure',
-        'Centro de massagens',
-        'Outro'
       ],
       interestOptions: [
         'Saber mais sobre a plataforma',
@@ -437,41 +437,6 @@ export default {
       };
       return buttons[this.locale] || buttons.pt;
     },
-    businessTypes() {
-      const types = {
-        'pt': [
-          'Salão de beleza',
-          'Spa',
-          'Cabelereiro',
-          'Barbearia',
-          'Centro de estética',
-          'Unhas e manicure',
-          'Centro de massagens',
-          'Outro'
-        ],
-        'es': [
-          'Salón de belleza',
-          'Spa',
-          'Peluquería',
-          'Barbería',
-          'Centro de estética',
-          'Uñas y manicura',
-          'Centro de masajes',
-          'Otro'
-        ],
-        'en': [
-          'Beauty salon',
-          'Spa',
-          'Hair salon',
-          'Barbershop',
-          'Aesthetic center',
-          'Nails and manicure',
-          'Massage center',
-          'Other'
-        ]
-      };
-      return types[this.locale] || types.pt;
-    },
     interestOptions() {
       const options = {
         'pt': [
@@ -529,6 +494,8 @@ export default {
   mounted() {
     this.animateElements();
     this.trackSectionView();
+    this.fetchInterests();
+    this.fetchBusinessTypes();
   },
   methods: {
     animateElements() {
@@ -593,6 +560,44 @@ export default {
       
       return isValid;
     },
+    async fetchInterests() {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/contact/interests`, {
+          headers: {
+            'Accept': 'application/json',
+            'X-API-KEY': import.meta.env.VITE_API_KEY
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Error al obtener los intereses');
+        }
+
+        const data = await response.json();
+        this.interests = data.interests;
+      } catch (error) {
+        console.error('Error fetching interests:', error);
+      }
+    },
+    async fetchBusinessTypes() {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/contact/business-types`, {
+          headers: {
+            'Accept': 'application/json',
+            'X-API-KEY': import.meta.env.VITE_API_KEY
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Error al obtener los tipos de negocios');
+        }
+
+        const data = await response.json();
+        this.businessTypes = data.business_types;
+      } catch (error) {
+        console.error('Error fetching business types:', error);
+      }
+    },
     async submitForm() {
       if (!this.validateForm()) {
         return;
@@ -612,8 +617,8 @@ export default {
             full_name: this.formData.name,
             email: this.formData.email,
             phone: this.formData.phone,
-            business_type_id: 1,
-            interest_id: 1,
+            business_type_id: this.formData.business_type_id,
+            interest_id: this.formData.interest_id,
             message: this.formData.message,
             language: this.locale,
             accept_terms: this.formData.privacyAccepted
@@ -670,8 +675,8 @@ export default {
         // Registrar el envío exitoso del formulario
         this.$analytics.event('form_submission', {
           form_id: 'contact_form',
-          business_type: this.formData.businessType,
-          interest: this.formData.interest,
+          business_type: this.formData.business_type_id,
+          interest: this.formData.interest_id,
           has_phone: !!this.formData.phone,
           language: this.locale
         });

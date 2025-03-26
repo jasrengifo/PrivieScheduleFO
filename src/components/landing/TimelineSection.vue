@@ -31,7 +31,7 @@
             <div class="card-body p-4">
               <h4 class="card-title mb-3">{{ timelineCTA.title }}</h4>
               <p class="card-text mb-4">{{ timelineCTA.description }}</p>
-              <button class="btn btn-gradient btn-lg">{{ timelineCTA.button }}</button>
+              <a href="#contact"><button class="btn btn-gradient btn-lg">{{ timelineCTA.button }}</button></a>
             </div>
           </div>
         </div>

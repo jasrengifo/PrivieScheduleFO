@@ -47,9 +47,9 @@
             <p class="benefits-cta-text">
               {{ ctaDescription }}
             </p>
-            <button class="btn btn-gradient btn-lg">
+            <a href="#contact"><button class="btn btn-gradient btn-lg">
               {{ ctaButton }}
-            </button>
+            </button></a>
           </div>
         </div>
       </div>
