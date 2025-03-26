@@ -1,4 +1,9 @@
 deployment:
   tasks:
-    - n: "Deploy"
+    - name: "Deploy"
       action: "echo Deploying app"
+      args:
+        - "Deploying app"
+      env:
+        - "APP_ENV=production"
+        - "APP_DEBUG=false"
