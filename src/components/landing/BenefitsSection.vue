@@ -123,7 +123,7 @@ export default {
           },
           {
             icon: 'fas fa-chart-pie',
-            title: 'Aumento de Receita',
+            title: 'Aumento da produtividade',
             description: 'Aumente sua taxa de ocupação e aproveite melhor sua capacidade',
             stat: { value: '22%', label: 'aumento em vendas' }
           },

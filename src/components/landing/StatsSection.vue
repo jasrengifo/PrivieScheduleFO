@@ -117,7 +117,7 @@ export default {
             icon: 'fas fa-chart-line',
             value: 42,
             suffix: '%',
-            label: 'Aumento de Receita',
+            label: 'Aumento da produtividade',
             description: 'Média em negócios com 6 meses de uso'
           }
         ],
