@@ -1,0 +1,4 @@
+deployment:
+  tasks:
+    - n: "Deploy"
+      action: "echo Deploying app"
