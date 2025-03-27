@@ -234,7 +234,6 @@ button:focus-visible {
 .calendar-day-header {
   flex: 1;
   min-width: 40px;
-  max-width: 50px;
   padding: 8px 4px;
   font-size: 0.75rem;
   text-align: center;
@@ -242,7 +241,6 @@ button:focus-visible {
 
 .time-header {
   min-width: 40px;
-  max-width: 40px;
 }
 
 .day-name {
@@ -264,7 +262,6 @@ button:focus-visible {
 
 .calendar-hours {
   min-width: 40px;
-  max-width: 40px;
   border-right: 1px solid #eee;
   background: #f9f9f9;
 }
@@ -297,7 +294,6 @@ button:focus-visible {
 .calendar-day-column {
   flex: 1;
   min-width: 40px;
-  max-width: 50px;
   border-right: 1px solid #eee;
   display: flex;
   flex-direction: column;
@@ -412,7 +408,6 @@ button:focus-visible {
   
   .time-header, .calendar-hours {
     min-width: 30px;
-    max-width: 30px;
   }
   
   .calendar-hour-cell {

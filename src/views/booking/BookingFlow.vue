@@ -394,4 +394,8 @@
   .progress-bar {
     background-color: #9c27b0;
   }
+
+  .booking-container {
+    margin-top: 70px;
+  }
   </style>
