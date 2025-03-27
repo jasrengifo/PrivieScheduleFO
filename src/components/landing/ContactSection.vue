@@ -228,6 +228,7 @@
 
 <script>
 import { useI18n } from 'vue-i18n'
+import { contactService } from '@/services/api';
 
 export default {
   name: 'ContactSection',
@@ -562,18 +563,7 @@ export default {
     },
     async fetchInterests() {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/contact/interests`, {
-          headers: {
-            'Accept': 'application/json',
-            'X-API-KEY': import.meta.env.VITE_API_KEY
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error('Error al obtener los intereses');
-        }
-
-        const data = await response.json();
+        const data = await contactService.getInterests();
         this.interests = data.interests;
       } catch (error) {
         console.error('Error fetching interests:', error);
@@ -581,18 +571,7 @@ export default {
     },
     async fetchBusinessTypes() {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/contact/business-types`, {
-          headers: {
-            'Accept': 'application/json',
-            'X-API-KEY': import.meta.env.VITE_API_KEY
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error('Error al obtener los tipos de negocios');
-        }
-
-        const data = await response.json();
+        const data = await contactService.getBusinessTypes();
         this.businessTypes = data.business_types;
       } catch (error) {
         console.error('Error fetching business types:', error);
@@ -604,63 +583,21 @@ export default {
       }
       
       this.isSubmitting = true;
+      this.responseMessage = '';
+      this.responseStatus = '';
       
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/contact/submit`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'X-API-KEY': import.meta.env.VITE_API_KEY
-          },
-          body: JSON.stringify({
-            full_name: this.formData.name,
-            email: this.formData.email,
-            phone: this.formData.phone,
-            business_type_id: this.formData.business_type_id,
-            interest_id: this.formData.interest_id,
-            message: this.formData.message,
-            language: this.locale,
-            accept_terms: this.formData.privacyAccepted
-          })
-        });
+        const data = await contactService.submitForm({
+          full_name: this.formData.name,
+          email: this.formData.email,
+          phone: this.formData.phone,
+          business_type_id: this.formData.business_type_id,
+          interest_id: this.formData.interest_id,
+          message: this.formData.message,
+          language: this.locale,
+          accept_terms: this.formData.privacyAccepted
+        }, this.locale);
 
-        const data = await response.json();
-
-        if (!response.ok) {
-          // Manejo específico de errores de validación (422)
-          if (response.status === 422 && data.errors) {
-            const errorMessages = {
-              'pt': 'Ops! Encontramos alguns erros no formulário:',
-              'es': '¡Ups! Encontramos algunos errores en el formulario:',
-              'en': 'Oops! We found some errors in the form:'
-            };
-            
-            let errorList = '<div class="alert alert-danger mt-2">';
-            Object.entries(data.errors).forEach(([field, messages]) => {
-              errorList += `<div class="d-flex align-items-center mb-2">
-                <i class="fas fa-exclamation-circle me-2"></i>
-                <span>${messages[0]}</span>
-              </div>`;
-            });
-            errorList += '</div>';
-            
-            this.responseMessage = `${errorMessages[this.locale] || errorMessages.pt}${errorList}`;
-            this.responseStatus = 'text-danger';
-            
-            // Registrar el error de validación
-            this.$analytics.event('form_validation_error', {
-              form_id: 'contact_form',
-              error_fields: Object.keys(data.errors).join(','),
-              language: this.locale
-            });
-            
-            return;
-          }
-          
-          throw new Error(data.message || 'Error en el envío');
-        }
-        
         // Mensajes de éxito según el idioma
         const successMessages = {
           'pt': 'Mensagem enviada com sucesso! Entraremos em contacto brevemente.',
@@ -682,23 +619,72 @@ export default {
         });
         
       } catch (error) {
-        // Manejo de error
+        // Manejo específico de errores de validación
+        if (error.type === 'validation' && error.errors) {
+          const errorMessages = {
+            'pt': 'Ops! Encontramos alguns erros no formulário:',
+            'es': '¡Ups! Encontramos algunos errores en el formulario:',
+            'en': 'Oops! We found some errors in the form:'
+          };
+          
+          let errorList = '<div class="alert alert-danger mt-2">';
+          Object.entries(error.errors).forEach(([field, messages]) => {
+            errorList += `<div class="d-flex align-items-center mb-2">
+              <i class="fas fa-exclamation-circle me-2"></i>
+              <span>${messages[0]}</span>
+            </div>`;
+          });
+          errorList += '</div>';
+          
+          this.responseMessage = `${errorMessages[this.locale] || errorMessages.pt}${errorList}`;
+          this.responseStatus = 'text-danger';
+          
+          // Registrar el error de validación
+          this.$analytics.event('form_validation_error', {
+            form_id: 'contact_form',
+            error_fields: Object.keys(error.errors).join(','),
+            language: this.locale
+          });
+          
+          return;
+        }
+        
+        // Manejo de otros errores
         const errorMessages = {
-          'pt': 'Ocorreu um problema ao enviar a mensagem. Por favor, tente novamente.',
-          'es': 'Hubo un problema al enviar el mensaje. Por favor, inténtalo de nuevo.',
-          'en': 'There was a problem sending the message. Please try again.'
+          'pt': {
+            'server': 'Ocorreu um problema no servidor. Por favor, tente novamente mais tarde.',
+            'network': 'Problema de conexão. Verifique sua internet e tente novamente.',
+            'unauthorized': 'Não autorizado. Por favor, verifique suas credenciais.',
+            'default': 'Ocorreu um problema ao enviar a mensagem. Por favor, tente novamente.'
+          },
+          'es': {
+            'server': 'Hubo un problema en el servidor. Por favor, inténtalo más tarde.',
+            'network': 'Problema de conexión. Verifica tu internet e inténtalo de nuevo.',
+            'unauthorized': 'No autorizado. Por favor, verifica tus credenciales.',
+            'default': 'Hubo un problema al enviar el mensaje. Por favor, inténtalo de nuevo.'
+          },
+          'en': {
+            'server': 'There was a server problem. Please try again later.',
+            'network': 'Connection problem. Check your internet and try again.',
+            'unauthorized': 'Unauthorized. Please check your credentials.',
+            'default': 'There was a problem sending the message. Please try again.'
+          }
         };
         
-        this.responseMessage = errorMessages[this.locale] || errorMessages.pt;
+        this.responseMessage = errorMessages[this.locale]?.[error.type] || 
+                             errorMessages[this.locale]?.default || 
+                             errorMessages.pt.default;
         this.responseStatus = 'text-danger';
-        console.error('Error sending form:', error);
         
         // Registrar el error en el envío
         this.$analytics.event('form_submission_error', {
           form_id: 'contact_form',
-          error_type: error.message || 'unknown',
+          error_type: error.type || 'unknown',
+          error_message: error.message,
           language: this.locale
         });
+        
+        console.error('Error sending form:', error);
       } finally {
         this.isSubmitting = false;
       }
