@@ -45,9 +45,11 @@
         :existingBookings="existingBookings"
         :availability="availability"
         :selectedAesthetician="selectedAesthetician"
+        :businessSchedule="businessSchedule"
         @time-click="handleTimeClick"
         @drop-service="handleDropService"
         @validate-availability="validateAvailability"
+        @show-notification="showNotification"
       />
       
       <!-- Horarios seleccionados -->
@@ -110,13 +112,27 @@ export default {
     selectedAesthetician: {
       type: Object,
       default: null
+    },
+    businessSchedule: {
+      type: Object,
+      required: true,
+      // Formato esperado:
+      // {
+      //   monday: { start: '09:00', end: '20:00' },
+      //   tuesday: { start: '09:00', end: '20:00' },
+      //   wednesday: { start: '09:00', end: '20:00' },
+      //   thursday: { start: '09:00', end: '20:00' },
+      //   friday: { start: '09:00', end: '20:00' },
+      //   saturday: { start: '09:00', end: '14:00' },
+      //   sunday: null // null significa que no se trabaja ese día
+      // }
     }
   },
   emits: ['update-scheduled-slots', 'next', 'prev'],
   data() {
     return {
       currentWeekStart: this.getStartOfWeek(new Date()),
-      businessHours: this.generateHourRange(9, 18),
+      businessHours: [], // Se inicializará en created
       currentDraggedService: null,
       scheduledSlots: [], // Guardamos múltiples slots
       touchSelectedService: null, // Para la interacción táctil
@@ -139,6 +155,9 @@ export default {
     
     // Cargar las reservas existentes desde mockData
     this.loadExistingBookings();
+    
+    // Generar el rango de horas basado en el horario de trabajo
+    this.businessHours = this.generateHourRange();
   },
   beforeUnmount() {
     window.removeEventListener('resize', this.handleResize);
@@ -200,20 +219,35 @@ export default {
       
       return monday;
     },
-    generateHourRange(startHour, endHour) {
+    generateHourRange() {
       const hours = [];
       
-      for (let hour = startHour; hour < endHour; hour++) {
+      // Obtener el horario más temprano y más tardío de todos los días
+      let earliestHour = 24;
+      let latestHour = 0;
+      
+      Object.values(this.businessSchedule).forEach(daySchedule => {
+        if (daySchedule) {
+          const [startHour] = daySchedule.start.split(':').map(Number);
+          const [endHour] = daySchedule.end.split(':').map(Number);
+          
+          earliestHour = Math.min(earliestHour, startHour);
+          latestHour = Math.max(latestHour, endHour);
+        }
+      });
+      
+      // Generar el rango de horas
+      for (let hour = earliestHour; hour < latestHour; hour++) {
         // Hora en punto
         hours.push({
-          label: `${hour}:00`, // Solo mostramos etiqueta para las horas completas
+          label: `${hour}:00`,
           value: `${hour.toString().padStart(2, '0')}:00`,
           isFullHour: true
         });
         
         // Media hora
         hours.push({
-          label: '', // Sin etiqueta para las medias horas
+          label: '',
           value: `${hour.toString().padStart(2, '0')}:30`,
           isFullHour: false
         });
@@ -221,8 +255,8 @@ export default {
       
       // Asegurarnos de añadir la última hora completa
       hours.push({
-        label: `${endHour}:00`,
-        value: `${endHour.toString().padStart(2, '0')}:00`,
+        label: `${latestHour}:00`,
+        value: `${latestHour.toString().padStart(2, '0')}:00`,
         isFullHour: true
       });
       
@@ -280,6 +314,41 @@ export default {
         const totalDuration = this.calculateTotalServiceDuration(service);
         const endTime = this.calculateEndTime(time, totalDuration);
         
+        // Verificar si el horario está disponible
+        const today = new Date();
+        const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        
+        if (date < todayStart) {
+          this.showNotification('No se pueden agendar servicios en días pasados', 'error');
+          return;
+        }
+        
+        // Si es hoy, verificar que la hora no sea anterior a la hora actual
+        if (this.formatDateISO(date) === this.formatDateISO(today)) {
+          const currentHour = today.getHours();
+          const currentMinute = today.getMinutes();
+          const currentInMinutes = currentHour * 60 + currentMinute;
+          
+          const [timeHour, timeMinute] = time.split(':').map(Number);
+          const timeInMinutes = timeHour * 60 + timeMinute;
+          
+          // Agregar un margen de 30 minutos para preparación
+          if (timeInMinutes <= currentInMinutes + 30) {
+            this.showNotification('No se pueden agendar servicios en horarios pasados', 'error');
+            return;
+          }
+
+          // Verificar que el servicio no termine después del horario de cierre
+          const [endHour, endMinute] = endTime.split(':').map(Number);
+          const endInMinutes = endHour * 60 + endMinute;
+          const closingTime = 20 * 60; // 20:00 en minutos
+
+          if (endInMinutes > closingTime) {
+            this.showNotification('El servicio terminaría después del horario de cierre', 'error');
+            return;
+          }
+        }
+        
         const bookingData = {
           date: this.formatDateISO(date),
           startTime: time,
@@ -288,32 +357,14 @@ export default {
           aestheticianId: this.selectedAesthetician?.id
         };
         
+        // Validar disponibilidad
         this.validateAvailability(bookingData, (isAvailable) => {
           if (isAvailable) {
-            const newSlot = {
-              date: new Date(date),
-              time: time,
-              endTime: endTime,
-              duration: this.getServiceHeight(totalDuration),
-              serviceId: service.id,
-              totalDuration: totalDuration
-            };
-            
-            const existingIndex = this.scheduledSlots.findIndex(slot => slot.serviceId === service.id);
-            
-            if (existingIndex !== -1) {
-              this.scheduledSlots.splice(existingIndex, 1, newSlot);
-            } else {
-              this.scheduledSlots.push(newSlot);
-            }
-            
-            this.$emit('update-scheduled-slots', this.scheduledSlots);
-            this.showNotification('Servicio agendado correctamente', 'success');
+            this.handleDropService(service, date, time);
+            this.touchSelectedService = null; // Limpiar la selección después de agendar
           } else {
-            this.showNotification('El horario seleccionado no está disponible.');
+            this.showNotification('Este horario no está disponible', 'error');
           }
-          
-          this.touchSelectedService = null;
         });
       }
     },
@@ -328,7 +379,8 @@ export default {
         endTime: endTime,
         duration: this.getServiceHeight(serviceData.duration),
         serviceId: serviceData.id,
-        totalDuration: serviceData.duration // Guardar la duración total para referencia
+        totalDuration: serviceData.duration, // Guardar la duración total para referencia
+        isNewBooking: true // Marcar como nuevo agendamiento
       };
       
       // Verificar si ya existe una asignación para este servicio
@@ -451,7 +503,7 @@ export default {
         // Verificar horarios de trabajo
         const dayOfWeek = selectedDate.getDay(); // 0 es domingo, 1 es lunes, etc.
         const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-        const workingHours = this.availability?.business?.workingHours?.[dayNames[dayOfWeek]];
+        const workingHours = this.businessSchedule[dayNames[dayOfWeek]];
         
         if (!workingHours) {
           this.showNotification('Este día no está disponible para agendar citas.');

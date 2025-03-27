@@ -64,6 +64,7 @@
           :loading="loading"
           :selected-slot="selectedSlot"
           :selected-aesthetician="selectedAesthetician"
+          :business-schedule="businessSchedule"
           @select-slot="selectTimeSlot"
           @next="nextStep"
           @prev="prevStep"
@@ -146,6 +147,17 @@
       
       // Servicios filtrados basados en el esteticista seleccionado
       const filteredServices = ref([]);
+      
+      // Horario de trabajo
+      const businessSchedule = ref({
+        monday: { start: '09:00', end: '20:00' },
+        tuesday: { start: '09:00', end: '20:00' },
+        wednesday: { start: '09:00', end: '20:00' },
+        thursday: { start: '09:00', end: '20:00' },
+        friday: { start: '09:00', end: '20:00' },
+        saturday: { start: '09:00', end: '14:00' },
+        sunday: null // null significa que no se trabaja ese día
+      });
       
       // Cargar datos iniciales
       onMounted(async () => {
@@ -300,7 +312,8 @@
         selectTimeSlot,
         updateCustomer,
         submitBooking,
-        getStepName
+        getStepName,
+        businessSchedule
       };
     }
   };
