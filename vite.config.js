@@ -3,34 +3,11 @@ import vue from '@vitejs/plugin-vue'
 import path from 'path';
 import fs from 'fs';
 
-// https://vite.dev/config/
-export default defineConfig(({ command, mode }) => {
-  // Cargar las variables de entorno según el modo
-  const env = loadEnv(mode, process.cwd(), '')
-  
-  return {
-    plugins: [vue()],
-    resolve: {
-      alias: {
-        '@': path.resolve(__dirname, './src'),
-      },
-    },
-    define: {
-      'process.env': env,
-      'import.meta.env': env
-    },
-    build: {
-      rollupOptions: {
-        output: {
-          entryFileNames: `assets/[name].[hash].js`,
-          chunkFileNames: `assets/[name].[hash].js`,
-          assetFileNames: `assets/[name].[hash].[ext]`
-        }
-      }
-    },
-    // Hook para copiar el .htaccess después del build
-    closeBundle() {
-      const htaccessContent = `RewriteEngine On
+// Plugin para crear .htaccess
+const htaccessPlugin = {
+  name: 'htaccess',
+  closeBundle() {
+    const htaccessContent = `RewriteEngine On
 RewriteBase /
 
 # Si el archivo o directorio no existe, redirigir a index.html
@@ -49,7 +26,39 @@ RewriteRule ^(.*)$ index.html [QSA,L]
     Deny from all
 </Files>`;
 
+    try {
       fs.writeFileSync('dist/.htaccess', htaccessContent);
+      console.log('✅ .htaccess creado exitosamente');
+    } catch (error) {
+      console.error('❌ Error al crear .htaccess:', error);
+    }
+  }
+};
+
+// https://vite.dev/config/
+export default defineConfig(({ command, mode }) => {
+  // Cargar las variables de entorno según el modo
+  const env = loadEnv(mode, process.cwd(), '')
+  
+  return {
+    plugins: [vue(), htaccessPlugin],
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src'),
+      },
+    },
+    define: {
+      'process.env': env,
+      'import.meta.env': env
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          entryFileNames: `assets/[name].[hash].js`,
+          chunkFileNames: `assets/[name].[hash].js`,
+          assetFileNames: `assets/[name].[hash].[ext]`
+        }
+      }
     }
   }
 })
