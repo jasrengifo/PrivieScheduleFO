@@ -12,6 +12,16 @@ const routes = [
     component: () => import('../views/website/LandingPage.vue')
   },
   {
+    path: '/login',
+    name: 'login',
+    component: () => import('../views/Login.vue')
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: () => import('../views/Register.vue')
+  },
+  {
     path: '/booking',
     name: 'booking',
     component: BookingFlow

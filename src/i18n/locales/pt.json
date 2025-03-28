@@ -178,5 +178,40 @@
     "terms": "Termos de uso",
     "privacy": "Política de privacidade",
     "copyright": "© 2023 Privie Schedule. Todos os direitos reservados."
+  },
+  "login": {
+    "welcome_back": "Bem-vindo de volta!",
+    "email": "E-mail",
+    "email_placeholder": "Digite seu e-mail",
+    "password": "Senha",
+    "password_placeholder": "Digite sua senha",
+    "remember_me": "Lembrar-me",
+    "forgot_password": "Esqueceu sua senha?",
+    "sign_in": "Entrar",
+    "no_account": "Não tem uma conta?",
+    "sign_up": "Cadastre-se"
+  },
+  "register": {
+    "create_account": "Criar conta",
+    "first_name": "Nome",
+    "first_name_placeholder": "Digite seu nome",
+    "last_name": "Sobrenome",
+    "last_name_placeholder": "Digite seu sobrenome",
+    "email": "E-mail",
+    "email_placeholder": "Digite seu e-mail",
+    "phone": "Telefone",
+    "phone_placeholder": "Digite seu número de telefone",
+    "password": "Senha",
+    "password_placeholder": "Crie uma senha segura",
+    "confirm_password": "Confirmar senha",
+    "confirm_password_placeholder": "Repita sua senha",
+    "passwords_dont_match": "As senhas não coincidem",
+    "accept_terms_1": "Eu aceito os",
+    "terms": "termos e condições",
+    "and": "e a",
+    "privacy": "política de privacidade",
+    "create_account": "Criar conta",
+    "already_have_account": "Já tem uma conta?",
+    "sign_in": "Entrar"
   }
 } 

@@ -13,19 +13,21 @@ function detectBrowserLanguage() {
   
   // Si no hay guardado, usamos el del navegador
   const browserLang = navigator.language.split('-')[0] // 'es-ES' -> 'es'
-  return ['pt', 'es', 'en'].includes(browserLang) ? browserLang : 'pt'
+  return ['es', 'en', 'pt'].includes(browserLang) ? browserLang : 'es'
 }
 
 // Crea la instancia de i18n
 const i18n = createI18n({
-  legacy: false, // Esto es importante para Vue 3
-  locale: 'pt', // Portugués como idioma inicial
-  fallbackLocale: 'pt', // Portugués como idioma de respaldo
+  legacy: false, // Usar el nuevo modo de composición de Vue 3
+  locale: detectBrowserLanguage(), // Usar el idioma detectado
+  fallbackLocale: 'es', // Español como idioma de respaldo
   messages: {
-    pt,
     es,
-    en
-  }
+    en,
+    pt
+  },
+  missingWarn: false, // Desactivar advertencias de claves faltantes
+  fallbackWarn: false // Desactivar advertencias de fallback
 })
 
 export default i18n 
