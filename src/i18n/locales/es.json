@@ -172,6 +172,7 @@
   },
   "landing": {},
   "login": {
+    "title": "Iniciar Sesión",
     "welcome_back": "¡Bienvenido de nuevo!",
     "email": "Correo electrónico",
     "email_placeholder": "Ingresa tu correo electrónico",
@@ -181,7 +182,8 @@
     "forgot_password": "¿Olvidaste tu contraseña?",
     "sign_in": "Iniciar sesión",
     "no_account": "¿No tienes una cuenta?",
-    "sign_up": "Regístrate"
+    "sign_up": "Regístrate",
+    "error": "Error al iniciar sesión"
   },
   "register": {
     "create_account": "Crear cuenta",

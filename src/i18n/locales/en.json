@@ -171,6 +171,7 @@
     "copyright": "© 2023 Privie Schedule. All rights reserved."
   },
   "login": {
+    "title": "Sign In",
     "welcome_back": "Welcome back!",
     "email": "Email",
     "email_placeholder": "Enter your email",
@@ -180,7 +181,8 @@
     "forgot_password": "Forgot password?",
     "sign_in": "Sign in",
     "no_account": "Don't have an account?",
-    "sign_up": "Sign up"
+    "sign_up": "Sign up",
+    "error": "Error signing in"
   },
   "register": {
     "create_account": "Create account",

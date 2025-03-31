@@ -180,6 +180,7 @@
     "copyright": "© 2023 Privie Schedule. Todos os direitos reservados."
   },
   "login": {
+    "title": "Iniciar Sessão",
     "welcome_back": "Bem-vindo de volta!",
     "email": "E-mail",
     "email_placeholder": "Digite seu e-mail",

@@ -22,6 +22,16 @@ const routes = [
     component: () => import('../views/Register.vue')
   },
   {
+    path: '/initial-setup',
+    name: 'initial-setup',
+    component: () => import('../views/InitialSetup.vue')
+  },
+  {
+    path: '/business-profile',
+    name: 'business-profile',
+    component: () => import('../views/BusinessProfile.vue')
+  },
+  {
     path: '/booking',
     name: 'booking',
     component: BookingFlow

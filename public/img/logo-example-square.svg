@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo con gradiente -->
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7e22ce;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#581c87;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Fondo -->
+  <rect width="400" height="400" fill="url(#grad)"/>
+  
+  <!-- Círculo decorativo -->
+  <circle cx="200" cy="200" r="150" stroke="white" stroke-width="2" fill="none" opacity="0.3"/>
+  <circle cx="200" cy="200" r="120" stroke="white" stroke-width="1" fill="none" opacity="0.2"/>
+  
+  <!-- Texto de ejemplo -->
+  <text x="50%" y="50%" 
+        font-family="Arial, sans-serif" 
+        font-size="48" 
+        fill="white" 
+        text-anchor="middle" 
+        dominant-baseline="middle">
+    Logo Cuadrado
+  </text>
+  
+  <!-- Líneas decorativas -->
+  <line x1="100" y1="200" x2="300" y2="200" stroke="white" stroke-width="2" opacity="0.3"/>
+  <line x1="200" y1="100" x2="200" y2="300" stroke="white" stroke-width="2" opacity="0.3"/>
+</svg> 
